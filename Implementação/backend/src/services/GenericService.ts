@@ -1,7 +1,6 @@
 import Database from "../modules/Database"
 import { filterObject, verifyIntegrity } from "../modules/Utils";
 import { AccessView } from "../views/AccessView";
-import { Created } from "../views/CreatedView";
 import { TablesNames, QueryBuildView, QueryTypes } from "../views/QueryBuildView"
 import { RequestException } from "../views/RequestExceptionView";
 

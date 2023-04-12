@@ -1,14 +1,8 @@
 import { UsersProperties } from "../views/UsersView";
 import { RequestException } from '../views/RequestExceptionView';
-import { AppointmentProperties } from "../views/AppointmenView";
-import { PatientProperties } from "../views/PatientView";
-import { AddressProperties } from "../views/AddressView";
 
 const viewProperties: any = {
-    Addresses: AddressProperties(),
-    Appointments: AppointmentProperties(),
     Users: UsersProperties(),
-    Patients: PatientProperties()
 }
 
 export function filterObject(viewName: string, receivedProperties: any) {
