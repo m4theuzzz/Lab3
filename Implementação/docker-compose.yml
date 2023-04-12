@@ -1,0 +1,49 @@
+services:
+  # lab_frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - './frontend:/app:cached'
+  #     - '/app/node_modules'
+  #   restart: always
+  #   environment:
+  #     - PORT=80
+  #     - ENV=dev #change to prod on deploy
+  #     - DISABLE_ESLINT_PLUGIN=true
+  #   depends_on:
+  #     - lab_backend
+  #     - lab_database
+  lab_backend:
+    build: ./backend
+    ports:
+      - 3000:3000
+    volumes:
+      - './backend:/app:cached'
+      - '/app/node_modules'
+    restart: always
+    environment:
+      - API_PORT=3000
+      - DB_USER=root
+      - DB_PASS=toor
+      - DB_HOST=lab_database
+      - DB_PORT=3306
+      - DB_NAME=lab_db
+      - KEY=c@esuis-jAhm*uq-qimte&x
+      - ENV=dev #change to prod on deploy
+    depends_on:
+      - lab_database
+  lab_database:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=toor
+      - MYSQL_DATABASE=PerioClass
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/seed.sql
