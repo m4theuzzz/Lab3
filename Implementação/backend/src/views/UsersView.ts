@@ -1,36 +1,39 @@
-export interface UsersView {
+export interface User {
     id: string;
     name: string;
     password: string;
     email: string;
-    phone: string;
-    level: number;
     createdAt: Date;
     updatedAt: Date;
 }
 
-export interface UsersRaw {
+export interface UserRaw {
     id: string;
     name: string;
     password: string;
     email: string;
-    phone: string;
-    level: number;
+    cpf: string;
+    rg: string;
+    address_id: string;
+    school: string;
+    course: string;
+    balance: number;
+    department: string;
+    account: string;
+    beneficts: string[];
     created_at: Date;
     updated_at: Date;
 }
 
-export function processUser(raw: UsersRaw): UsersView {
+export function processUser(raw: UserRaw): User {
     return {
         id: raw.id,
         name: raw.name,
         password: raw.password,
         email: raw.email,
-        level: raw.level,
-        phone: raw.phone,
         createdAt: raw.created_at,
         updatedAt: raw.updated_at,
-    } as UsersView;
+    } as User;
 }
 
 export function UsersProperties() {
@@ -42,7 +45,16 @@ export function UsersProperties() {
         ],
         optional: [
             "id",
-            "phone"
+            "phone",
+            "cpf",
+            "rg",
+            "address_id",
+            "school",
+            "course",
+            "balance",
+            "department",
+            "account",
+            "beneficts",
         ]
     }
 }

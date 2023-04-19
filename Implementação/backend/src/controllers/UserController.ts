@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import GenericService from '../services/GenericService';
 import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
-import { processUser, UsersRaw } from '../views/UsersView';
+import { processUser, UserRaw } from '../views/UsersView';
 
 export const route = Router();
 const service = new GenericService();
@@ -33,7 +33,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
 
 route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
-        const rawUsers = (await service.select<UsersRaw[]>({
+        const rawUsers = (await service.select<UserRaw[]>({
             userId: req.sessionID,
             level: Number(req.headers.authorization)
         }, TablesNames.USERS, req.query).catch(error => {
