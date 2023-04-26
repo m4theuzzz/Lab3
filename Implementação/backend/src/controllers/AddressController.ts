@@ -50,7 +50,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         }
 
         if (insertion) {
-            const insertedId = await service.getLastInsertedItem(TablesNames.ADDRESSES, req.sessionID);
+            const insertedId = await service.getLastInsertedItem(TablesNames.ADDRESSES);
             res.status(200).send({ message: "Endereço criado com sucesso.", id: insertedId[0].id });
         } else {
             res.status(401).send("Você não possui permissão para adicionar endereços.");

@@ -15,7 +15,7 @@ class AuthService {
         }
 
         const userView = processUser(user);
-
+        console.log(Security.AESDecrypt(user.password), password)
         if (Security.AESDecrypt(user.password) == password) {
             return {
                 "user": {

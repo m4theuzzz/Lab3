@@ -15,8 +15,6 @@ import NavBar from "../components/NavBar";
 import { useForm } from "../hooks/useForm";
 import useModal from "../hooks/useModal";
 
-const carsmock = [1, 2, 3, 45, 6];
-
 const defaultPartnerValues = {
   name: "",
   email: "",
@@ -51,9 +49,17 @@ const Parceiros = () => {
 
     try {
       if (isEdit) {
-        const res = await axios.post("", values).then((res) => res.data);
+        const res = await axios.put(`http://localhost:3000/partners?id=${values.id}`, values, {
+          headers: {
+            "session-token": window.localStorage.getItem('apiKey')
+          }
+        }).then((res) => res.data);
       } else {
-        const res = await axios.put("", values).then((res) => res.data);
+        const res = await axios.post("http://localhost:3000/partners", values, {
+          headers: {
+            "session-token": window.localStorage.getItem('apiKey')
+          }
+        }).then((res) => res.data);
       }
 
       getPartners();
@@ -63,7 +69,11 @@ const Parceiros = () => {
   };
 
   const getPartners = async () => {
-    const res = await axios.get('').then((res) => res.data);
+    const res = await axios.get("http://localhost:3000/partners", {
+      headers: {
+        "session-token": window.localStorage.getItem('apiKey')
+      }
+    }).then((res) => res.data);
 
     setPartners(res);
   };
@@ -130,11 +140,11 @@ const Parceiros = () => {
             <Button onClick={handleAddPartner}>Confirmar</Button>
           </Grid>
         </Modal>
-        {carsmock.map((partner: any) => (
+        {partners.map((partner: any) => (
           <Grid item>
             <BasicCard
-              title={partner.model}
-              subtitle={`${partner.year} | ${partner.brand}`}
+              title={partner.name}
+              subtitle={`${partner.email} | ${partner.sector}`}
               action={() => handleOpenEdit(partner)}
               action2={() => handleDeletePartner(partner)}
               actionText={"Editar"}

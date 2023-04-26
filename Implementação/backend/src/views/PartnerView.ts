@@ -23,3 +23,15 @@ export const processPartner = (userRaw: PartnerRaw) => {
         updatedAt: userRaw.updated_at,
     };
 }
+
+export function PartnerProperties() {
+    return {
+        required: [
+            "sector"
+        ],
+        optional: [
+            "id",
+            "user_id",
+        ]
+    }
+}

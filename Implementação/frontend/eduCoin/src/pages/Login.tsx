@@ -15,11 +15,14 @@ const Login = () => {
   const handleSignIn = async () => {
     try {
       const logedIn = await axios.post(
-        "http://localhost:8080/users/login",
+        "http://localhost:3000/auth/login",
         values
       );
-      window.location.href = "http://localhost:5173/cars";
-    } catch {}
+      //@ts-ignore
+      console.log(logedIn.data)
+      window.localStorage.setItem('apiKey', logedIn.data.sessionToken)
+      window.location.href = "http://localhost:5173";
+    } catch { }
   };
 
   return (

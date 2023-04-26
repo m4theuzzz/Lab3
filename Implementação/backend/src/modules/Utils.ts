@@ -1,9 +1,13 @@
 import { UsersProperties } from "../views/UsersView";
 import { RequestException } from '../views/RequestExceptionView';
 import { AddressProperties } from "../views/AddressView";
+import { StudentProperties } from "../views/StudentView";
+import { PartnerProperties } from "../views/PartnerView";
 
 const viewProperties: any = {
     Users: UsersProperties(),
+    Students: StudentProperties(),
+    Partners: PartnerProperties(),
     Addresses: AddressProperties(),
 }
 

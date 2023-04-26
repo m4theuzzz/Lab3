@@ -4,6 +4,7 @@ import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
 import { processPartner, PartnerRaw } from '../views/PartnerView';
 import { Security } from '../modules/Security';
+import { UserRaw } from '../views/UsersView';
 
 export const route = Router();
 const service = new GenericService();
@@ -11,13 +12,30 @@ const service = new GenericService();
 route.post('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const body = { ...req.body, password: Security.AESEncrypt(req.body.password) }
+        const userBody = { ...body }
+
+        const createUser = await service.create(
+            {
+                userId: req.sessionID,
+            },
+            TablesNames.USERS,
+            userBody
+        ).catch(error => {
+            res.status(error.status ?? 500).send(error.sqlMessage);
+        });
+
+        if (!createUser) {
+            return;
+        }
+
+        const createdUserId = (await service.getLastInsertedItem(TablesNames.USERS))[0].id;
 
         const createPartners = await service.create(
             {
                 userId: req.sessionID,
             },
             TablesNames.PARTNERS,
-            body
+            { ...body, user_id: createdUserId }
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
@@ -25,7 +43,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         if (!createPartners) {
             return;
         } else {
-            const createdId = service.getLastInsertedItem(TablesNames.PARTNERS, req.sessionID);
+            const createdId = service.getLastInsertedItem(TablesNames.PARTNERS);
             res.status(200).send({ message: "Parceiro criado com sucesso.", id: createdId });
         }
     } catch (error) {
@@ -41,11 +59,21 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         }));
 
-        if (!rawPartners) {
+        const rawUsers = (await service.select<UserRaw[]>({
+            userId: req.sessionID
+        }, TablesNames.USERS, {}).catch(error => {
+            res.status(error.status ?? 500).send(error.sqlMessage);
+        }));
+
+        if (!rawPartners || !rawUsers) {
             return;
         }
 
-        let user = processPartner(rawPartners[0]);
+        let user = rawPartners.map(partner => {
+            const processedPartner = processPartner(partner);
+            const studentUser = rawUsers.find(user => user.id == partner.user_id)
+            return { ...processedPartner, name: studentUser.name, email: studentUser.email }
+        });
 
         return res.status(200).send(user);
     } catch (error) {

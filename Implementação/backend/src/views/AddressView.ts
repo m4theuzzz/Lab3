@@ -5,7 +5,7 @@ export interface Address {
     city: string,
     district: string,
     country: string,
-    createdBy: string,
+    userId: string,
     createdAt: string,
     updatedAt: string,
 }
@@ -17,7 +17,7 @@ export interface AddressRaw {
     city: string,
     district: string,
     country: string,
-    created_by: string,
+    user_id: string,
     created_at: string,
     updated_at: string,
 }
@@ -30,7 +30,7 @@ export function processAddress(raw: AddressRaw): Address {
         city: raw.city,
         district: raw.district,
         country: raw.country,
-        createdBy: raw.created_by,
+        userId: raw.user_id,
         createdAt: raw.created_at,
         updatedAt: raw.updated_at,
     };

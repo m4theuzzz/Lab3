@@ -22,12 +22,7 @@ class GenericService {
         } as QueryBuildView;
 
         const filters = filterObject(service, queryParams);
-
-        if (service !== TablesNames.USERS) {
-            queryOptions.filters = { ...filters, "created_by": access.userId };
-        } else {
-            queryOptions.filters = { ...filters, "id": access.userId };
-        }
+        queryOptions.filters = filters
 
         if (orderBy) {
             queryOptions.orderBy = orderBy;
@@ -54,15 +49,11 @@ class GenericService {
 
         const { columns, values } = this.buildColumnsAndValuesArray(properties);
 
-        if (service !== TablesNames.USERS) {
-            queryOptions.columns = [...columns, "created_by"];
-            queryOptions.values = [...values, access.userId];
-        } else {
-            queryOptions.columns = columns;
-            queryOptions.values = values;
-        }
+        queryOptions.columns = columns;
+        queryOptions.values = values;
 
         const query = Database.buildQuery(queryOptions);
+        console.log(query)
 
         return this.execute<any>(query);
     }
@@ -87,11 +78,7 @@ class GenericService {
         queryOptions.columns = columns;
         queryOptions.values = values;
 
-        if (service !== TablesNames.USERS) {
-            queryOptions.filters = { "id": targetId, "created_by": access.userId };
-        } else {
-            queryOptions.filters = { "id": access.userId };
-        }
+        queryOptions.filters = { "id": targetId };
 
         const query = Database.buildQuery(queryOptions);
 
@@ -109,7 +96,7 @@ class GenericService {
         } as QueryBuildView;
 
         if (service !== TablesNames.USERS) {
-            queryOptions.filters = { "id": targetId, "created_by": access.userId };
+            queryOptions.filters = { "id": targetId, "user_id": access.userId };
         } else {
             queryOptions.filters = { "id": targetId };
         }
@@ -129,8 +116,8 @@ class GenericService {
         );
     }
 
-    getLastInsertedItem = (service: TablesNames, userId: string): Promise<[{ id: string }]> => {
-        const query = `SELECT id FROM ${service} where created_by='${userId}' order by created_at DESC LIMIT 1;`
+    getLastInsertedItem = (service: TablesNames): Promise<[{ id: string }]> => {
+        const query = `SELECT id FROM ${service} order by created_at DESC LIMIT 1;`
         return this.execute(query);
     }
 }

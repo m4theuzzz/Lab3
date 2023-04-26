@@ -4,6 +4,7 @@ import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
 import { processStudent, StudentRaw } from '../views/StudentView';
 import { Security } from '../modules/Security';
+import { UserRaw } from '../views/UsersView';
 
 export const route = Router();
 const service = new GenericService();
@@ -11,13 +12,30 @@ const service = new GenericService();
 route.post('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const body = { ...req.body, password: Security.AESEncrypt(req.body.password) }
+        const userBody = { ...body }
+
+        const createUser = await service.create(
+            {
+                userId: req.sessionID,
+            },
+            TablesNames.USERS,
+            userBody
+        ).catch(error => {
+            res.status(error.status ?? 500).send(error.sqlMessage);
+        });
+
+        if (!createUser) {
+            return;
+        }
+
+        const createdUserId = (await service.getLastInsertedItem(TablesNames.USERS))[0].id;
 
         const createStudents = await service.create(
             {
                 userId: req.sessionID,
             },
             TablesNames.STUDENTS,
-            body
+            { ...body, user_id: createdUserId, address_id: 1 }
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
@@ -25,7 +43,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         if (!createStudents) {
             return;
         } else {
-            const createdId = service.getLastInsertedItem(TablesNames.STUDENTS, req.sessionID);
+            const createdId = service.getLastInsertedItem(TablesNames.STUDENTS);
             res.status(200).send({ message: "Aluno criado com sucesso.", id: createdId });
         }
     } catch (error) {
@@ -41,11 +59,21 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         }));
 
-        if (!rawStudents) {
+        const rawUsers = (await service.select<UserRaw[]>({
+            userId: req.sessionID
+        }, TablesNames.USERS, {}).catch(error => {
+            res.status(error.status ?? 500).send(error.sqlMessage);
+        }));
+
+        if (!rawStudents || !rawUsers) {
             return;
         }
 
-        let user = processStudent(rawStudents[0]);
+        let user = rawStudents.map(student => {
+            const processedStudent = processStudent(student);
+            const studentUser = rawUsers.find(user => user.id == student.user_id)
+            return { ...processedStudent, name: studentUser.name, email: studentUser.email }
+        });
 
         return res.status(200).send(user);
     } catch (error) {

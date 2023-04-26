@@ -24,8 +24,6 @@ const defaultStudentValues = {
   course: "",
 };
 
-const carsmock = [1, 2, 3, 45, 6];
-
 const Students = () => {
   const [students, setStudents] = useState([]);
 
@@ -41,7 +39,7 @@ const Students = () => {
     }
   };
 
-  const handleOpenEdit = (student) => {
+  const handleOpenEdit = (student: any) => {
     setValues(student);
     studentModal.open(true);
   };
@@ -51,9 +49,17 @@ const Students = () => {
 
     try {
       if (isEdit) {
-        const res = await axios.post("", values).then((res) => res.data);
+        const res = await axios.post("http://localhost:3000/students", values, {
+          headers: {
+            "session-token": window.localStorage.getItem('apiKey')
+          }
+        }).then((res) => res.data);
       } else {
-        const res = await axios.put("", values).then((res) => res.data);
+        const res = await axios.put("http://localhost:3000/students", values, {
+          headers: {
+            "session-token": window.localStorage.getItem('apiKey')
+          }
+        }).then((res) => res.data);
       }
     } catch (error) {
       alert("Erro: " + error);
@@ -61,7 +67,11 @@ const Students = () => {
   };
 
   const getStudents = async () => {
-    const res = await axios.get("").then((res) => res.data);
+    const res = await axios.get("http://localhost:3000/students", {
+      headers: {
+        "session-token": window.localStorage.getItem('apiKey')
+      }
+    }).then((res) => res.data);
 
     setStudents(res);
   };
@@ -145,11 +155,11 @@ const Students = () => {
             <Button onClick={handleAddStudent}>Confirmar</Button>
           </Grid>
         </Modal>
-        {carsmock.map((student: any) => (
+        {students.map((student: any) => (
           <Grid item>
             <BasicCard
-              title={student.model}
-              subtitle={`${student.year} | ${student.brand}`}
+              title={student.name}
+              subtitle={`${student.school} | ${student.course}`}
               action={() => handleOpenEdit(student)}
               action2={() => handleDeleteStudent(student.id)}
               actionText={"Editar"}

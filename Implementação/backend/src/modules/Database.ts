@@ -40,7 +40,7 @@ class Database {
             let query = this.buildQueryStart(params.type);
             query += `${params.tableName} `;
             query += this.buildQueryBody(params.type, params.columns, params.values);
-            query += this.buildQueryFilters(params.type, params.filters);
+            query += params.filters && Object.keys(params.filters).length !== 0 ? this.buildQueryFilters(params.type, params.filters) : '';
             query += this.buildOrderByString(params.type, params.orderBy);
             query += `;`;
             return query;

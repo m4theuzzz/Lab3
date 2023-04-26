@@ -46,9 +46,13 @@ app.use(express.urlencoded({ limit: '5mb' }));
 
 import { route as AuthController } from './src/controllers/AuthController';
 import { route as UserController } from './src/controllers/UserController';
+import { route as PartnerController } from './src/controllers/PartnerController';
+import { route as StudentController } from './src/controllers/StudentController';
 
 app.use('/auth', AuthController);
 app.use('/users', UserController);
+app.use('/partners', PartnerController);
+app.use('/students', StudentController);
 
 app.listen(process.env.API_PORT, async () => {
     Database.connectMysql();

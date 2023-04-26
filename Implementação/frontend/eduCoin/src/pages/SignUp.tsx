@@ -12,7 +12,11 @@ const SignUp = () => {
   const { values, handleChange } = useForm(defaultValues, {});
 
   const handleSignUp = async () => {
-    const userCreated = await axios.post('http://localhost:8080/users', values);
+    const userCreated = await axios.post('http://localhost:3000/users', values, {
+      headers: {
+        "session-token": window.localStorage.getItem('apiKey')
+      }
+    });
   };
 
 
@@ -58,7 +62,7 @@ const SignUp = () => {
           Cadastrar
         </Button>
       </Grid>
-     
+
     </Grid>
   );
 };

@@ -31,3 +31,19 @@ export const processStudent = (userRaw: StudentRaw) => {
         updatedAt: userRaw.updated_at
     };
 }
+
+export function StudentProperties() {
+    return {
+        required: [
+            "rg",
+            "school",
+            "course",
+            "address_id",
+            "balance",
+        ],
+        optional: [
+            "id",
+            "user_id",
+        ]
+    }
+}
