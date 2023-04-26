@@ -1,4 +1,5 @@
 export interface Student {
+    id: number;
     userId: number;
     rg: string;
     addressId: number;
@@ -10,6 +11,7 @@ export interface Student {
 }
 
 export interface StudentRaw {
+    id: number;
     user_id: number;
     rg: string;
     school: string;
@@ -22,6 +24,8 @@ export interface StudentRaw {
 
 export const processStudent = (userRaw: StudentRaw) => {
     return {
+        id: userRaw.id,
+        userId: userRaw.user_id,
         rg: userRaw.rg,
         addressId: userRaw.address_id,
         school: userRaw.school,

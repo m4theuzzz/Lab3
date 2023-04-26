@@ -33,7 +33,13 @@ const Students = () => {
 
   const handleDeleteStudent = async (id) => {
     try {
-      await axios.delete("");
+      await axios.delete(`http://localhost:3000/students?id=${id}`, {
+        headers: {
+          "session-token": window.localStorage.getItem('apiKey')
+        }
+      });
+
+      getStudents();
     } catch (error) {
       alert("Erro: " + error);
     }
@@ -49,18 +55,24 @@ const Students = () => {
 
     try {
       if (isEdit) {
-        const res = await axios.post("http://localhost:3000/students", values, {
+        let newvalues = {
+          ...values
+        }
+        delete newvalues.email
+        const res = await axios.put(`http://localhost:3000/students?id=${values.id}`, newvalues, {
           headers: {
             "session-token": window.localStorage.getItem('apiKey')
           }
         }).then((res) => res.data);
       } else {
-        const res = await axios.put("http://localhost:3000/students", values, {
+        const res = await axios.post("http://localhost:3000/students", values, {
           headers: {
             "session-token": window.localStorage.getItem('apiKey')
           }
         }).then((res) => res.data);
       }
+      studentModal.close()
+      getStudents()
     } catch (error) {
       alert("Erro: " + error);
     }

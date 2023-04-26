@@ -81,6 +81,7 @@ class GenericService {
         queryOptions.filters = { "id": targetId };
 
         const query = Database.buildQuery(queryOptions);
+        console.log(query);
 
         return this.execute<any>(query);
     }
@@ -95,11 +96,7 @@ class GenericService {
             tableName: service,
         } as QueryBuildView;
 
-        if (service !== TablesNames.USERS) {
-            queryOptions.filters = { "id": targetId, "user_id": access.userId };
-        } else {
-            queryOptions.filters = { "id": targetId };
-        }
+        queryOptions.filters = { "id": targetId };
 
         const query = Database.buildQuery(queryOptions);
 

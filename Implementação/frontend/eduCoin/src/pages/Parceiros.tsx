@@ -36,7 +36,11 @@ const Parceiros = () => {
 
   const handleDeletePartner = async (id) => {
     try {
-      await axios.delete("xxxxx/" + id);
+      await axios.delete(`http://localhost:3000/partners?id=${id}`, {
+        headers: {
+          "session-token": window.localStorage.getItem('apiKey')
+        }
+      });
 
       getPartners();
     } catch (error) {
@@ -61,7 +65,7 @@ const Parceiros = () => {
           }
         }).then((res) => res.data);
       }
-
+      partnerModal.close()
       getPartners();
     } catch (error) {
       alert("Erro: " + error);
@@ -146,7 +150,7 @@ const Parceiros = () => {
               title={partner.name}
               subtitle={`${partner.email} | ${partner.sector}`}
               action={() => handleOpenEdit(partner)}
-              action2={() => handleDeletePartner(partner)}
+              action2={() => handleDeletePartner(partner.id)}
               actionText={"Editar"}
               action2Text={"Excluir"}
             />

@@ -83,13 +83,27 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
 
 route.put('/', authMiddleware, async (req: Request, res: Response) => {
     try {
+        const body = req.body;
+        const userBody = { ...body, id: body.userId, password: Security.AESEncrypt(body.password) }
+
         const updatePartners = await service.update({
             userId: req.sessionID,
-        }, TablesNames.PARTNERS, String(req.query.id), req.body).catch(error => {
+        }, TablesNames.PARTNERS, String(req.query.id), body).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
 
         if (!updatePartners) {
+            return;
+        }
+
+        console.log(userBody)
+        const updateUser = await service.update({
+            userId: req.sessionID,
+        }, TablesNames.USERS, userBody.id, userBody).catch(error => {
+            res.status(error.status ?? 500).send(error.sqlMessage);
+        });
+
+        if (!updateUser) {
             return;
         }
 
