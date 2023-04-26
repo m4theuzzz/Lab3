@@ -1,14 +1,25 @@
-import { User, UserRaw, processUser } from "./UsersView";
-
-export interface Teacher extends User {
+export interface Teacher {
+    userId: number;
     department: string;
-    account: string;
+    cpf: number;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-export const processTeacher = (userRaw: UserRaw) => {
+export interface TeacherRaw {
+    user_id: number;
+    cpf: number;
+    department: string;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export const processTeacher = (userRaw: TeacherRaw) => {
     return {
-        ...processUser(userRaw),
+        userId: userRaw.user_id,
         department: userRaw.department,
-        account: userRaw.account,
+        cpf: userRaw.cpf,
+        createdAt: userRaw.created_at,
+        updatedAt: userRaw.updated_at
     };
 }

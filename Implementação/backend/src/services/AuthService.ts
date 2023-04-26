@@ -35,7 +35,7 @@ class AuthService {
 
             if (this.tokenIsValid(userData)) {
                 await this.authorize(userData.email, Security.AESDecrypt(userData.password));
-                return { userId: userData.userId, level: userData.level } as AccessView;
+                return { userId: userData.userId } as AccessView;
             }
         } catch (error) {
             throw error;
@@ -47,8 +47,7 @@ class AuthService {
             !userData.expireAt ||
             !userData.email ||
             !userData.password ||
-            !userData.userId ||
-            !userData.level
+            !userData.userId
         ) {
             throw { status: 403, message: "Token inválido." } as RequestException;
         }

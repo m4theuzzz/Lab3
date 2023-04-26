@@ -7,9 +7,8 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
     if (req.headers["session-token"]) {
         try {
             const sessionToken = req.headers['session-token'];
-            const { userId, level } = await authenticate(sessionToken);
+            const { userId } = await authenticate(sessionToken);
             req.sessionID = String(userId);
-            req.headers.authorization = String(level);
             next();
         } catch (error) {
             console.log(error);

@@ -2,7 +2,6 @@ import Database from "../modules/Database"
 import { filterObject, verifyIntegrity } from "../modules/Utils";
 import { AccessView } from "../views/AccessView";
 import { TablesNames, QueryBuildView, QueryTypes } from "../views/QueryBuildView"
-import { RequestException } from "../views/RequestExceptionView";
 
 class GenericService {
     execute = Database.executeQuery;
@@ -59,9 +58,6 @@ class GenericService {
             queryOptions.columns = [...columns, "created_by"];
             queryOptions.values = [...values, access.userId];
         } else {
-            if (access.level < 7) {
-                throw { status: 401, message: "Você não possui permissão para realizar essa operação." } as RequestException;
-            }
             queryOptions.columns = columns;
             queryOptions.values = values;
         }

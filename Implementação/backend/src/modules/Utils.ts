@@ -1,8 +1,10 @@
 import { UsersProperties } from "../views/UsersView";
 import { RequestException } from '../views/RequestExceptionView';
+import { AddressProperties } from "../views/AddressView";
 
 const viewProperties: any = {
     Users: UsersProperties(),
+    Addresses: AddressProperties(),
 }
 
 export function filterObject(viewName: string, receivedProperties: any) {

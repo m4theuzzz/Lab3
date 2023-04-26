@@ -12,8 +12,7 @@ const ENCRYPTED_POSITION = TAG_POSITION + TAG_LENGTH;
 
 export class Security {
     static getKey(salt: Buffer) {
-        //TODO: fazer as variáveis de ambiente funcionarem !!!!!!!!
-        return crypto.pbkdf2Sync("c@esxi4-jAhm*uq-qimte&x", salt, 100000, 32, 'sha512');
+        return crypto.pbkdf2Sync(process.env.KEY, salt, 100000, 32, 'sha512');
     }
 
     static AESEncrypt(plainText: string) {
@@ -59,15 +58,14 @@ export class Security {
                 userId: userData.id,
                 email: userData.email,
                 password: userData.password,
-                level: userData.level,
                 expireAt: expireDate
             },
-            "c@esxi4-jAhm*uq-qimte&x"
+            process.env.KEY
         );
     }
 
     static JWTDecrypt(sessionToken: string) {
-        const userData = verify(sessionToken, "c@esxi4-jAhm*uq-qimte&x") as any;
+        const userData = verify(sessionToken, process.env.KEY) as any;
         return userData;
     }
 }

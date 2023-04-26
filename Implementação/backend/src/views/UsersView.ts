@@ -12,15 +12,6 @@ export interface UserRaw {
     name: string;
     password: string;
     email: string;
-    cpf: string;
-    rg: string;
-    address_id: string;
-    school: string;
-    course: string;
-    balance: number;
-    department: string;
-    account: string;
-    beneficts: string[];
     created_at: Date;
     updated_at: Date;
 }
@@ -45,16 +36,6 @@ export function UsersProperties() {
         ],
         optional: [
             "id",
-            "phone",
-            "cpf",
-            "rg",
-            "address_id",
-            "school",
-            "course",
-            "balance",
-            "department",
-            "account",
-            "beneficts",
         ]
     }
 }

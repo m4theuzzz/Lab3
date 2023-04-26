@@ -48,7 +48,7 @@ import { route as AuthController } from './src/controllers/AuthController';
 import { route as UserController } from './src/controllers/UserController';
 
 app.use('/auth', AuthController);
-app.use('/user', UserController);
+app.use('/users', UserController);
 
 app.listen(process.env.API_PORT, async () => {
     Database.connectMysql();
