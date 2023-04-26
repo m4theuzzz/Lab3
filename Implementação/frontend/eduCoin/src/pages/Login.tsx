@@ -13,7 +13,13 @@ const Login = () => {
   const { values, handleChange } = useForm(defaultValues, {});
 
   const handleSignIn = async () => {
-    axios.post();
+    try {
+      const logedIn = await axios.post(
+        "http://localhost:8080/users/login",
+        values
+      );
+      window.location.href = "http://localhost:5173/cars";
+    } catch {}
   };
 
   return (

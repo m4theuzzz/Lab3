@@ -17,17 +17,17 @@ services:
   lab_backend:
     build: ./backend
     ports:
-      - 3000:3000
+      - 5000:5000
     volumes:
       - './backend:/app:cached'
       - '/app/node_modules'
     restart: always
     environment:
-      - API_PORT=3000
+      - API_PORT=5000
       - DB_USER=root
       - DB_PASS=toor
       - DB_HOST=lab_database
-      - DB_PORT=3306
+      - DB_PORT=3307
       - DB_NAME=lab_db
       - KEY=c@esuis-jAhm*uq-qimte&x
       - ENV=dev #change to prod on deploy
@@ -38,9 +38,9 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
-      - 3306:3306
+      - 3307:3307
     expose:
-      - 3306
+      - 3307
     environment:
       - MYSQL_ROOT_PASSWORD=toor
       - MYSQL_DATABASE=PerioClass

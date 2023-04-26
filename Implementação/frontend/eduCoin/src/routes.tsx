@@ -1,7 +1,7 @@
 import { Routes, Route, Outlet, Link } from "react-router-dom";
-import Cars from "./pages/Cars";
+import Cars from "./pages/Parceiros";
 import Login from "./pages/Login";
-import Requests from "./pages/Requests";
+import Requests from "./pages/Students";
 import SignUp from "./pages/SignUp";
 
 const AppRoutes = () => {
@@ -9,7 +9,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Requests />} />
-        <Route path="cars" element={<Cars />} />
+        <Route path="partners" element={<Cars />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
       </Route>

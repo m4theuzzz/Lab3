@@ -7,27 +7,27 @@ const NavBar = ({ pageName }: any) => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          {pageName}
+         <strong>EduCoin - </strong> {pageName}
         </Typography>
         <Link to={"/"}>
           <Button
             sx={{
               color: "white",
               textDecoration:
-                pageName == "Pedidos de Aluguel" ? "underline" : "",
+                pageName == "Alunos" ? "underline" : "",
             }}
           >
-            Pedidos de Aluguel
+            Alunos
           </Button>
         </Link>
-        <Link to={"/cars"}>
+        <Link to={"/partners"}>
           <Button
             sx={{
               color: "white",
-              textDecoration: pageName == "Carros" ? "underline" : "",
+              textDecoration: pageName == "Parceiros" ? "underline" : "",
             }}
           >
-            Carros
+            Parceiros
           </Button>
         </Link>
         <Link to={"/login"}>

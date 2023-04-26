@@ -12,8 +12,9 @@ const SignUp = () => {
   const { values, handleChange } = useForm(defaultValues, {});
 
   const handleSignUp = async () => {
-    axios.post();
+    const userCreated = await axios.post('http://localhost:8080/users', values);
   };
+
 
   return (
     <Grid
