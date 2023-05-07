@@ -72,3 +72,13 @@ INSERT INTO Partners (
     5,
     "humanas"
 );
+
+INSERT INTO Teachers (
+    user_id,
+    cpf,
+    department
+) VALUES (
+    1,
+    321,
+    "Ciências Exatas"
+);

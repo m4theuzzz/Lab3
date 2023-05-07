@@ -51,7 +51,7 @@ const Students = () => {
   };
 
   const handleAddStudent = async () => {
-    const isEdit = !!studentModal.elementClicked;
+    const isEdit = !!values.id;
 
     try {
       if (isEdit) {
@@ -84,7 +84,7 @@ const Students = () => {
         "session-token": window.localStorage.getItem('apiKey')
       }
     }).then((res) => res.data);
-
+    console.log(res)
     setStudents(res);
   };
 
@@ -103,7 +103,7 @@ const Students = () => {
         </Grid>
         <Modal
           open={studentModal.isOpen}
-          close={studentModal.close}
+          close={() => { studentModal.close(); setValues(defaultStudentValues) }}
           title={"Novo aluno"}
         >
           <Grid container spacing={5}>

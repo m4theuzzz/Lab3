@@ -49,7 +49,7 @@ const Parceiros = () => {
   };
 
   const handleAddPartner = async () => {
-    const isEdit = !!partnerModal.elementClicked;
+    const isEdit = !!values.id;
 
     try {
       if (isEdit) {
@@ -97,7 +97,7 @@ const Parceiros = () => {
         </Grid>
         <Modal
           open={partnerModal.isOpen}
-          close={partnerModal.close}
+          close={() => { partnerModal.close(); setValues(defaultPartnerValues) }}
           title={"Novo parceiro"}
         >
           <Grid container spacing={5}>
