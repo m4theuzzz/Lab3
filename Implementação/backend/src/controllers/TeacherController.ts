@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import GenericService from '../services/GenericService';
 import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
-import { processPartner, PartnerRaw } from '../views/PartnerView';
+import { processTeacher, TeacherRaw } from '../views/TeacherView';
 import { Security } from '../modules/Security';
 import { UserRaw } from '../views/UsersView';
 
@@ -30,21 +30,21 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
 
         const createdUserId = (await service.getLastInsertedItem(TablesNames.USERS))[0].id;
 
-        const createPartners = await service.create(
+        const createTeachers = await service.create(
             {
                 userId: Number(req.sessionID),
             },
-            TablesNames.PARTNERS,
-            { ...body, user_id: createdUserId }
+            TablesNames.TEACHERS,
+            { ...body, user_id: createdUserId, address_id: 1 }
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
 
-        if (!createPartners) {
+        if (!createTeachers) {
             return;
         } else {
-            const createdId = (await service.getLastInsertedItem(TablesNames.PARTNERS))[0].id;
-            res.status(200).send({ message: "Parceiro criado com sucesso.", id: createdId });
+            const createdId = (await service.getLastInsertedItem(TablesNames.TEACHERS))[0].id;
+            res.status(200).send({ message: "Professor(a) criado com sucesso.", id: createdId });
         }
     } catch (error) {
         return res.status(error.status ?? 500).send(error.message);
@@ -53,9 +53,9 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
 
 route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
-        const rawPartners = (await service.select<PartnerRaw[]>({
+        const rawTeachers = (await service.select<TeacherRaw[]>({
             userId: Number(req.sessionID)
-        }, TablesNames.PARTNERS, req.query).catch(error => {
+        }, TablesNames.TEACHERS, req.query).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         }));
 
@@ -65,14 +65,14 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         }));
 
-        if (!rawPartners || !rawUsers) {
+        if (!rawTeachers || !rawUsers) {
             return;
         }
 
-        let user = rawPartners.map(partner => {
-            const processedPartner = processPartner(partner);
-            const studentUser = rawUsers.find(user => user.id == partner.user_id)
-            return { ...processedPartner, name: studentUser.name, email: studentUser.email }
+        let user = rawTeachers.map(teacher => {
+            const processedTeacher = processTeacher(teacher);
+            const teacherUser = rawUsers.find(user => user.id == teacher.user_id)
+            return { ...processedTeacher, name: teacherUser.name, email: teacherUser.email }
         });
 
         return res.status(200).send(user);
@@ -86,17 +86,16 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
         const body = req.body;
         const userBody = { ...body, id: body.userId, password: Security.AESEncrypt(body.password) }
 
-        const updatePartners = await service.update({
+        const updateTeachers = await service.update({
             userId: Number(req.sessionID),
-        }, TablesNames.PARTNERS, String(req.query.id), body).catch(error => {
+        }, TablesNames.TEACHERS, String(req.query.id), body).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
 
-        if (!updatePartners) {
+        if (!updateTeachers) {
             return;
         }
 
-        console.log(userBody)
         const updateUser = await service.update({
             userId: Number(req.sessionID),
         }, TablesNames.USERS, userBody.id, userBody).catch(error => {
@@ -107,10 +106,10 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
             return;
         }
 
-        if (updatePartners.affectedRows === 0) {
+        if (updateTeachers.affectedRows === 0) {
             res.status(401).send("Você não possui permissão para editar este usuário.");
         } else {
-            res.status(200).send("Parceiro atualizado com sucesso.");
+            res.status(200).send("Professor(a) atualizado com sucesso.");
         }
     } catch (error) {
         return res.status(error.status ?? 500).send(error.message);
@@ -119,20 +118,20 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
 
 route.delete('/', authMiddleware, async (req: Request, res: Response) => {
     try {
-        const deletePartners = await service.remove({
+        const deleteTeachers = await service.remove({
             userId: Number(req.sessionID),
-        }, TablesNames.PARTNERS, String(req.query.id)).catch(error => {
+        }, TablesNames.TEACHERS, String(req.query.id)).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
 
-        if (!deletePartners) {
+        if (!deleteTeachers) {
             return;
         }
 
-        if (deletePartners.affectedRows === 0) {
+        if (deleteTeachers.affectedRows === 0) {
             res.status(401).send("Você não possui permissão para remover este usuário.");
         } else {
-            res.status(200).send("Parceiro removido com sucesso.");
+            res.status(200).send("Professor(a) removido com sucesso.");
         }
     } catch (error) {
         return res.status(error.status ?? 500).send(error.message);

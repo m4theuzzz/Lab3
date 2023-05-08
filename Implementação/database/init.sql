@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS Students (
     rg bigint unique not null,
     school varchar(80),
     course varchar(80) not null,
+    balance bigint not null,
     address_id bigint not null,
     created_at datetime not null default current_timestamp,
     updated_at datetime not null default current_timestamp on update current_timestamp,
@@ -66,9 +67,11 @@ CREATE TABLE IF NOT EXISTS Transactions (
     type enum('debit', 'credit') not null,
     value int not null default 0,
     description text default null,
-    user_id bigint not null,
+    origin bigint not null,
+    target bigint not null,
     created_at datetime not null default current_timestamp,
     updated_at datetime not null default current_timestamp on update current_timestamp,
-    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (origin) REFERENCES Users(id),
+    FOREIGN KEY (target) REFERENCES Users(id),
     PRIMARY KEY(id)
 );

@@ -3,12 +3,16 @@ import { RequestException } from '../views/RequestExceptionView';
 import { AddressProperties } from "../views/AddressView";
 import { StudentProperties } from "../views/StudentView";
 import { PartnerProperties } from "../views/PartnerView";
+import { TeacherProperties } from "../views/TeacherView";
+import { TransactionProperties } from "../views/TransactionView";
 
 const viewProperties: any = {
     Users: UsersProperties(),
     Students: StudentProperties(),
     Partners: PartnerProperties(),
     Addresses: AddressProperties(),
+    Teachers: TeacherProperties(),
+    Transactions: TransactionProperties()
 }
 
 export function filterObject(viewName: string, receivedProperties: any) {

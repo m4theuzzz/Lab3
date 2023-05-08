@@ -1,3 +1,3 @@
 export interface AccessView {
-    userId: string
+    userId: number
 }

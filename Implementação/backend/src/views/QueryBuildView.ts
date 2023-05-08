@@ -18,5 +18,7 @@ export enum TablesNames {
     ADDRESSES = "Addresses",
     USERS = "Users",
     STUDENTS = "Students",
-    PARTNERS = "Partners"
+    PARTNERS = "Partners",
+    TEACHERS = "Teachers",
+    TRANSACTIONS = "Transactions"
 }

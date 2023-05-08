@@ -2,30 +2,32 @@ import { Request, Response, Router } from 'express';
 import GenericService from '../services/GenericService';
 import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
-import { AddressRaw, processAddress } from '../views/AddressView';
+import { TransactionRaw, processTransaction } from '../views/TransactionView';
+import { TransactionService } from '../services/TransactionService';
 
 export const route = Router();
 const service = new GenericService();
+const operations = new TransactionService();
 
 route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
-        const rawAddresses = await service.select<AddressRaw[]>(
+        const rawTransactions = await service.select<TransactionRaw[]>(
             {
                 userId: Number(req.sessionID),
             },
-            TablesNames.ADDRESSES,
+            TablesNames.TRANSACTIONS,
             req.query
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
 
-        if (!rawAddresses) {
+        if (!rawTransactions) {
             return;
         }
 
-        const addresses = rawAddresses.map(address => processAddress(address));
+        const transactions = rawTransactions.map(transaction => processTransaction(transaction));
 
-        res.status(200).send(addresses);
+        res.status(200).send(transactions);
     } catch (error) {
         res.status(error.status ?? 500).send(error.message);
     }
@@ -38,7 +40,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
             {
                 userId: Number(req.sessionID),
             },
-            TablesNames.ADDRESSES,
+            TablesNames.TRANSACTIONS,
             req.body
         ).catch(error => {
             err = error
@@ -49,11 +51,14 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
             return;
         }
 
+        const insertedId = (await service.getLastInsertedItem(TablesNames.TRANSACTIONS))[0].id;
+
+        await operations.transfer({ userId: Number(req.sessionID) }, req.body)
+
         if (insertion) {
-            const insertedId = await service.getLastInsertedItem(TablesNames.ADDRESSES);
-            res.status(200).send({ message: "Endereço criado com sucesso.", id: insertedId[0].id });
+            res.status(200).send({ message: "Transação criada com sucesso.", id: insertedId });
         } else {
-            res.status(401).send("Você não possui permissão para adicionar endereços.");
+            res.status(401).send("Você não possui permissão para adicionar transações.");
         }
     } catch (error) {
         res.status(error.status ?? 500).send(error.message);
@@ -69,7 +74,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
             {
                 userId: Number(req.sessionID),
             },
-            TablesNames.ADDRESSES,
+            TablesNames.TRANSACTIONS,
             String(req.query.id),
             req.body
         ).catch(error => {
@@ -81,9 +86,9 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
         }
 
         if (update.affectedRows > 0) {
-            res.status(200).send("Endereço atualizado com sucesso.");
+            res.status(200).send("Transação atualizado com sucesso.");
         } else {
-            res.status(401).send("O endereço solicitado não foi encontrado.");
+            res.status(401).send("A transação solicitada não foi encontrada.");
         }
     } catch (error) {
         res.status(error.status ?? 500).send(error.message);
@@ -99,7 +104,7 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
             {
                 userId: Number(req.sessionID),
             },
-            TablesNames.ADDRESSES,
+            TablesNames.TRANSACTIONS,
             String(req.query.id)
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
@@ -110,9 +115,9 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
         }
 
         if (update.affectedRows > 0) {
-            res.status(200).send("Endereço removido com sucesso.");
+            res.status(200).send("Transação removida com sucesso.");
         } else {
-            res.status(401).send("O endereço solicitado não foi encontrado.");
+            res.status(401).send("A transação solicitada não foi encontrada.");
         }
     } catch (error) {
         res.status(error.status ?? 500).send(error.message);

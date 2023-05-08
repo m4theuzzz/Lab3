@@ -1,4 +1,5 @@
 export interface Teacher {
+    id: number;
     userId: number;
     department: string;
     cpf: number;
@@ -7,6 +8,7 @@ export interface Teacher {
 }
 
 export interface TeacherRaw {
+    id: number;
     user_id: number;
     cpf: number;
     department: string;
@@ -16,6 +18,7 @@ export interface TeacherRaw {
 
 export const processTeacher = (userRaw: TeacherRaw) => {
     return {
+        id: userRaw.id,
         userId: userRaw.user_id,
         department: userRaw.department,
         cpf: userRaw.cpf,
@@ -23,3 +26,14 @@ export const processTeacher = (userRaw: TeacherRaw) => {
         updatedAt: userRaw.updated_at
     };
 }
+
+export const TeacherProperties = () => ({
+    required: [
+        "cpf",
+        "department"
+    ],
+    optional: [
+        "id",
+        "user_id"
+    ]
+})

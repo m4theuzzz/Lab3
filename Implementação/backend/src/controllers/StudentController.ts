@@ -16,7 +16,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
 
         const createUser = await service.create(
             {
-                userId: req.sessionID,
+                userId: Number(req.sessionID),
             },
             TablesNames.USERS,
             userBody
@@ -32,7 +32,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
 
         const createStudents = await service.create(
             {
-                userId: req.sessionID,
+                userId: Number(req.sessionID),
             },
             TablesNames.STUDENTS,
             { ...body, user_id: createdUserId, address_id: 1 }
@@ -43,7 +43,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         if (!createStudents) {
             return;
         } else {
-            const createdId = service.getLastInsertedItem(TablesNames.STUDENTS);
+            const createdId = (await service.getLastInsertedItem(TablesNames.STUDENTS))[0].id;
             res.status(200).send({ message: "Aluno criado com sucesso.", id: createdId });
         }
     } catch (error) {
@@ -54,13 +54,13 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
 route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const rawStudents = (await service.select<StudentRaw[]>({
-            userId: req.sessionID
+            userId: Number(req.sessionID)
         }, TablesNames.STUDENTS, req.query).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         }));
 
         const rawUsers = (await service.select<UserRaw[]>({
-            userId: req.sessionID
+            userId: Number(req.sessionID)
         }, TablesNames.USERS, {}).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         }));
@@ -87,7 +87,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
         const userBody = { ...body, id: body.userId, password: Security.AESEncrypt(body.password) }
 
         const updateStudents = await service.update({
-            userId: req.sessionID,
+            userId: Number(req.sessionID),
         }, TablesNames.STUDENTS, String(req.query.id), body).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
@@ -97,7 +97,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
         }
 
         const updateUser = await service.update({
-            userId: req.sessionID,
+            userId: Number(req.sessionID),
         }, TablesNames.USERS, userBody.id, userBody).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
@@ -119,7 +119,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
 route.delete('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const deleteStudents = await service.remove({
-            userId: req.sessionID,
+            userId: Number(req.sessionID),
         }, TablesNames.STUDENTS, String(req.query.id)).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });

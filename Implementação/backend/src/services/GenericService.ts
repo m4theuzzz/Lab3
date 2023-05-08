@@ -113,7 +113,7 @@ class GenericService {
         );
     }
 
-    getLastInsertedItem = (service: TablesNames): Promise<[{ id: string }]> => {
+    getLastInsertedItem = (service: TablesNames): Promise<[{ id: number }]> => {
         const query = `SELECT id FROM ${service} order by created_at DESC LIMIT 1;`
         return this.execute(query);
     }

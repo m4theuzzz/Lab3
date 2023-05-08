@@ -14,7 +14,7 @@ route.post('/', async (req: Request, res: Response) => {
 
         const createUser = await service.create(
             {
-                userId: req.sessionID,
+                userId: Number(req.sessionID),
             },
             TablesNames.USERS,
             { ...body, address_id: 1 }
@@ -35,7 +35,7 @@ route.post('/', async (req: Request, res: Response) => {
 route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const rawUsers = (await service.select<UserRaw[]>({
-            userId: req.sessionID
+            userId: Number(req.sessionID)
         }, TablesNames.USERS, req.query).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         }));
@@ -55,7 +55,7 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
 route.put('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const updateUser = await service.update({
-            userId: req.sessionID,
+            userId: Number(req.sessionID),
         }, TablesNames.USERS, String(req.query.id), req.body).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
@@ -77,7 +77,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
 route.delete('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const deleteUser = await service.remove({
-            userId: req.sessionID,
+            userId: Number(req.sessionID),
         }, TablesNames.USERS, String(req.query.id)).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
