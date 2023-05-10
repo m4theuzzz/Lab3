@@ -17,12 +17,12 @@ interface FilmType {
 const DropdownAsync = ({
   value,
   endpoint,
-  onChange,
   valueKey,
   valueTag,
   ...props
 }: any) => {
   // ** States
+  console.log(props)
   const [open, setOpen] = useState<boolean>(false);
   const [options, setOptions] = useState<FilmType[]>([]);
 
@@ -36,7 +36,11 @@ const DropdownAsync = ({
     }
 
     const fetchData = async () => {
-      const response = await axios.get("http://localhost:3000" + endpoint);
+      const response = await axios.get("http://localhost:3000" + endpoint, {
+        headers: {
+          "session-token": window.localStorage.getItem("apiKey"),
+        },
+      });
 
       const data = await response.data;
 
@@ -49,12 +53,6 @@ const DropdownAsync = ({
       active = false;
     };
   }, [loading]);
-
-  useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
 
   return (
     <Autocomplete
@@ -70,8 +68,8 @@ const DropdownAsync = ({
           : options.find((option: any) => option[valueTag] == valueKey) || null
       }
       id="autocomplete-asynchronous-request"
-      getOptionLabel={(option) => option.title || ""}
-      isOptionEqualToValue={(option, value) => option.title === value.title}
+      getOptionLabel={(option) => option.name || ""}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField
           {...params}

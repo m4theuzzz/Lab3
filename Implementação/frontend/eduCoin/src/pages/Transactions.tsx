@@ -9,7 +9,7 @@ import BasicCard from "../components/Card";
 import DropdownAsync from "../components/DropdownAsync";
 
 const defaultTransactionValues = {
-  type: "",
+  type: "credit",
   value: "",
   description: "",
   origin: "",
@@ -25,17 +25,19 @@ const Transactions = () => {
   const [currentBalance, setCurrentBalance] = useState("");
 
   const [transactions, setTransactions] = useState([]);
+  const [students, setStudents] = useState<any>([]);
 
   const getBalance = async () => {
     const res = await axios
-      .get("http://localhost:3000/teacher", {
+      .get("http://localhost:3000/teachers" + `?user_id=${window.localStorage.getItem("userId")}`, {
         headers: {
           "session-token": window.localStorage.getItem("apiKey"),
         },
       })
       .then((res) => res.data);
 
-    setCurrentBalance(res.balance);
+    console.log(res)
+    setCurrentBalance(res[0].balance);
   };
 
   const getTransactions = async () => {
@@ -49,6 +51,19 @@ const Transactions = () => {
 
     setTransactions(res);
   };
+
+  const getStudents = async () => {
+    const res = await axios
+      .get("http://localhost:3000/students", {
+        headers: {
+          "session-token": window.localStorage.getItem("apiKey"),
+        },
+      })
+      .then((res) => res.data);
+
+    setStudents(res)
+
+  }
 
   const handleAddTransaction = async () => {
     try {
@@ -71,6 +86,7 @@ const Transactions = () => {
   useEffect(() => {
     getBalance();
     getTransactions();
+    getStudents()
   }, []);
 
   return (
@@ -83,7 +99,7 @@ const Transactions = () => {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6" sx={{ color: "primary" }}>
+          <Typography variant="h6" sx={{ color: "black" }}>
             Saldo atual: {currentBalance} moedas
           </Typography>
         </Grid>
@@ -107,20 +123,13 @@ const Transactions = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                label="Email"
-                fullWidth
-                value={values.email}
-                onChange={handleChange("email")}
-              />
-            </Grid>
-            <Grid item xs={12}>
               <DropdownAsync
                 label="Aluno"
                 endpoint="/students"
                 fullWidth
                 valueKey={values.target}
-                onChange={handleChangeDropdownValue("target")}
+                valueTag="id"
+                onChange={handleChangeDropdownValue("target", "id")}
               />
             </Grid>
 
@@ -146,13 +155,13 @@ const Transactions = () => {
         <Grid item xs={12}>
           {transactions.length
             ? transactions.map((transaction: any) => (
-                <Grid item>
-                  <BasicCard
-                    title={`R$ ${transaction.value}`}
-                    subtitle={`${transaction.description}`}
-                  />
-                </Grid>
-              ))
+              <Grid item>
+                <BasicCard
+                  title={`R$ ${transaction.value}`}
+                  subtitle={`${transaction.description} | para ${students.find((student: any) => student.id == transaction.target)?.name}`}
+                />
+              </Grid>
+            ))
             : null}
         </Grid>
       </Grid>

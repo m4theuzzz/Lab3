@@ -14,10 +14,10 @@ export class TransactionService {
         this.execute = execute
     }
 
-    private async operate(access: AccessView, targetId: number, transaction: TransactionRaw) {
+    private async operate(access: AccessView, targetId: number, transaction: TransactionRaw, tableName: TablesNames) {
         const target = (await service.select<StudentRaw[]>(
             access,
-            TablesNames.STUDENTS,
+            tableName,
             { id: targetId }
         ).catch(error => {
             throw new Error("Usuário não encontrado.");
@@ -30,34 +30,34 @@ export class TransactionService {
         let value = 0;
 
         if (transaction.type == "credit") {
-            value = target.balance + transaction.value;
+            value = Number(target.balance) + Number(transaction.value);
         } else {
-            value = target.balance - transaction.value;
+            value = Number(target.balance) - Number(transaction.value);
         }
+
+        console.log()
 
         if (transaction.value < 0) {
             throw new Error("Operação inválida. Não há creditos suficientes.");
         }
 
-        const query = `UPDATE Students SET balance=${value} where id=${targetId};`
+        const query = `UPDATE ${tableName} SET balance=${value} where id=${targetId};`
 
         return this.execute(query)
     }
 
     async transfer(access: AccessView, transaction: TransactionRaw) {
         try {
-            await this.operate(access, transaction.target, transaction);
+            await this.operate(access, transaction.target, transaction, TablesNames.STUDENTS);
 
             if (transaction.type === "credit") {
-                await this.operate(access, access.userId, { ...transaction, type: "debit" });
+                await this.operate(access, access.userId, { ...transaction, type: "debit" }, TablesNames.TEACHERS);
             } else {
-                await this.operate(access, access.userId, { ...transaction, type: "credit" });
+                await this.operate(access, access.userId, { ...transaction, type: "credit" }, TablesNames.TEACHERS);
             }
         } catch (error) {
             throw error;
         }
     }
-
-    async undoOperation(access: AccessView, transaction: TransactionRaw) { }
 
 }

@@ -41,7 +41,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
                 userId: Number(req.sessionID),
             },
             TablesNames.TRANSACTIONS,
-            req.body
+            { ...req.body, origin: Number(req.sessionID) }
         ).catch(error => {
             err = error
             res.status(error.status ?? 500).send(error.sqlMessage);

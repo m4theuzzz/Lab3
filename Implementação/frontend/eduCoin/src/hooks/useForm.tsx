@@ -36,30 +36,28 @@ export function useForm(initialFValues: any, validations: any, editId?: any) {
 
   const handleChangeDropdownValue =
     (prop: any, tag?: any, saveDescription = false) =>
-    (e: any, newVal: any) => {
-      //TODO tirar E
+      (e: any, newVal: any) => {
+        const hierarchy = prop.split(".");
 
-      const hierarchy = prop.split(".");
+        if (newVal != null) {
+          let newFormValues: any = {};
+          if (hierarchy.length > 1) {
+            newFormValues = { [hierarchy[0]]: { ...values[hierarchy[0]] } };
 
-      if (newVal != null) {
-        let newFormValues: any = {};
-        if (hierarchy.length > 1) {
-          newFormValues = { [hierarchy[0]]: { ...values[hierarchy[0]] } };
+            newFormValues[hierarchy[0]][hierarchy[1]] = !!tag
+              ? newVal[tag]
+              : newVal;
+          } else {
+            newFormValues[prop] = !!tag ? newVal[tag] : newVal;
+          }
 
-          newFormValues[hierarchy[0]][hierarchy[1]] = !!tag
-            ? newVal[tag]
-            : newVal;
-        } else {
-          newFormValues[prop] = !!tag ? newVal[tag] : newVal;
+          if (saveDescription) {
+            newFormValues[prop + "Visual"] = newVal;
+          }
+          console.log(newFormValues)
+          setValues({ ...values, ...newFormValues });
         }
-
-        if (saveDescription) {
-          newFormValues[prop + "Visual"] = newVal;
-        }
-
-        setValues({ ...values, ...newFormValues });
-      }
-    };
+      };
 
   function getFieldErrors(objError) {
     //     const errorsRes: FieldErrors = {};

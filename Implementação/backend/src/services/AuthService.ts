@@ -19,8 +19,10 @@ class AuthService {
         if (Security.AESDecrypt(user.password) == password) {
             return {
                 "user": {
+                    "id": userView.id,
                     "name": userView.name,
-                    "email": userView.email
+                    "email": userView.email,
+                    "role": "teacher"
                 },
                 "sessionToken": Security.JWTEncrypt(userView)
             };
