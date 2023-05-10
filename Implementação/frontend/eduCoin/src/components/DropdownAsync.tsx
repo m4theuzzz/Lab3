@@ -36,7 +36,7 @@ const DropdownAsync = ({
     }
 
     const fetchData = async () => {
-      const response = await axios.get("/" + endpoint);
+      const response = await axios.get("http://localhost:3000" + endpoint);
 
       const data = await response.data;
 

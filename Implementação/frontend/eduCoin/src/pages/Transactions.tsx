@@ -50,6 +50,24 @@ const Transactions = () => {
     setTransactions(res);
   };
 
+  const handleAddTransaction = async () => {
+    try {
+      const res = await axios
+        .post("http://localhost:3000/transactions", values, {
+          headers: {
+            "session-token": window.localStorage.getItem("apiKey"),
+          },
+        })
+        .then((res) => res.data);
+
+      transactionModal.close();
+      getTransactions();
+      getBalance();
+    } catch (error) {
+      alert("Erro: " + error);
+    }
+  };
+
   useEffect(() => {
     getBalance();
     getTransactions();
@@ -99,6 +117,7 @@ const Transactions = () => {
             <Grid item xs={12}>
               <DropdownAsync
                 label="Aluno"
+                endpoint="/students"
                 fullWidth
                 valueKey={values.target}
                 onChange={handleChangeDropdownValue("target")}
@@ -121,18 +140,20 @@ const Transactions = () => {
             xs={12}
           >
             <Button onClick={transactionModal.close}>Cancelar</Button>
-            <Button onClick={() => {}}>Confirmar</Button>
+            <Button onClick={handleAddTransaction}>Confirmar</Button>
           </Grid>
         </Modal>
         <Grid item xs={12}>
-          {transactions.map((transaction: any) => (
-            <Grid item>
-              <BasicCard
-                title={`R$ ${transaction.value}`}
-                subtitle={`${transaction.description}`}
-              />
-            </Grid>
-          ))}
+          {transactions.length
+            ? transactions.map((transaction: any) => (
+                <Grid item>
+                  <BasicCard
+                    title={`R$ ${transaction.value}`}
+                    subtitle={`${transaction.description}`}
+                  />
+                </Grid>
+              ))
+            : null}
         </Grid>
       </Grid>
     </Grid>
