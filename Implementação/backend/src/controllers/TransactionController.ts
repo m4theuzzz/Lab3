@@ -4,6 +4,7 @@ import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
 import { TransactionRaw, processTransaction } from '../views/TransactionView';
 import { TransactionService } from '../services/TransactionService';
+import { getTargetNewBalance } from '../modules/Utils';
 
 export const route = Router();
 const service = new GenericService();
@@ -36,6 +37,15 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
 route.post('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         let err = null
+
+        if (!req.body.value || req.body.value < 1) {
+            res.status(400).send("Valor inválido.");
+        }
+
+        if (!req.body.description || req.body.description == "") {
+            res.status(400).send("Descrição inválida.");
+        }
+
         const insertion = await service.create(
             {
                 userId: Number(req.sessionID),
@@ -52,8 +62,12 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         }
 
         const insertedId = (await service.getLastInsertedItem(TablesNames.TRANSACTIONS))[0].id;
+        const access = { userId: Number(req.sessionID) };
 
-        await operations.transfer({ userId: Number(req.sessionID) }, req.body)
+        const targetValue = await getTargetNewBalance(access, req.body.target, req.body, TablesNames.STUDENTS);
+        const originValue = await getTargetNewBalance(access, access.userId, { ...req.body, type: "debit" }, TablesNames.TEACHERS);
+
+        await operations.transfer(access, req.body.target, targetValue, originValue)
 
         if (insertion) {
             res.status(200).send({ message: "Transação criada com sucesso.", id: insertedId });

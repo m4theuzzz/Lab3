@@ -3,6 +3,7 @@ import { processUser } from '../views/UsersView';
 import { Security } from '../modules/Security';
 import { RequestException } from '../views/RequestExceptionView';
 import { AccessView } from '../views/AccessView';
+import { findRole } from '../modules/Utils';
 
 class AuthService {
     static authorize = async (email: string, password: string) => {
@@ -14,6 +15,8 @@ class AuthService {
             throw { status: 404, message: "Email não cadastrado." } as RequestException;
         }
 
+        const role = await findRole(user.id);
+
         const userView = processUser(user);
         console.log(Security.AESDecrypt(user.password), password)
         if (Security.AESDecrypt(user.password) == password) {
@@ -22,7 +25,7 @@ class AuthService {
                     "id": userView.id,
                     "name": userView.name,
                     "email": userView.email,
-                    "role": "teacher"
+                    "role": role
                 },
                 "sessionToken": Security.JWTEncrypt(userView)
             };
