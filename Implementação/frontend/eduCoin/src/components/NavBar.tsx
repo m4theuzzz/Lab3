@@ -29,6 +29,16 @@ const NavBar = ({ pageName }: any) => {
             Parceiros
           </Button>
         </Link>
+        <Link to={"/beneficios"}>
+          <Button
+            sx={{
+              color: "white",
+              textDecoration: pageName == "Benefícios" ? "underline" : "",
+            }}
+          >
+            Benefícios
+          </Button>
+        </Link>
         <Link to={"/transactions"}>
           <Button
             sx={{

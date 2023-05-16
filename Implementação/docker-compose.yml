@@ -16,7 +16,7 @@ services:
   lab_backend:
     build: ./backend
     ports:
-      - 3000:3000
+      - 3008:3008
     volumes:
       - './backend:/app:cached'
       - '/app/node_modules'
@@ -37,9 +37,9 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
-      - 3306:3306
+      - 3308:3308
     expose:
-      - 3306
+      - 3308
     environment:
       - MYSQL_ROOT_PASSWORD=toor
       - MYSQL_DATABASE=PerioClass

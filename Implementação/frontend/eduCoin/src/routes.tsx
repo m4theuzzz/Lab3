@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Requests from "./pages/Students";
 import SignUp from "./pages/SignUp";
 import Transactions from "./pages/Transactions";
+import Beneficios from "./pages/Beneficios";
 
 const AppRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
         <Route index element={<Requests />} />
         <Route path="partners" element={<Cars />} />
         <Route path="login" element={<Login />} />
+        <Route path="beneficios" element={<Beneficios />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="transactions" element={<Transactions />} />
       </Route>
