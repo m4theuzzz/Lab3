@@ -9,11 +9,13 @@ import Database from "./Database";
 import GenericService from "../services/GenericService";
 import { AccessView } from "../views/AccessView";
 import { TablesNames } from "../views/QueryBuildView";
+import { BenefictProperties } from "../views/BenefictView";
 
 const service = new GenericService();
 
 const viewProperties: any = {
     Users: UsersProperties(),
+    Beneficts: BenefictProperties(),
     Students: StudentProperties(),
     Partners: PartnerProperties(),
     Addresses: AddressProperties(),

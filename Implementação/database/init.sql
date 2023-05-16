@@ -76,3 +76,15 @@ CREATE TABLE IF NOT EXISTS Transactions (
     FOREIGN KEY (target) REFERENCES Users(id),
     PRIMARY KEY(id)
 );
+
+CREATE TABLE IF NOT EXISTS Beneficts (
+    id bigint not null auto_increment,
+    value int not null,
+    description text not null,
+    photo text not null,
+    user_id bigint not null,
+    created_at datetime not null default current_timestamp,
+    updated_at datetime not null default current_timestamp on update current_timestamp,
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    PRIMARY KEY(id)
+);

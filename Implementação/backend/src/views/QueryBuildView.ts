@@ -16,6 +16,7 @@ export enum QueryTypes {
 
 export enum TablesNames {
     ADDRESSES = "Addresses",
+    BENEFICTS = "Beneficts",
     USERS = "Users",
     STUDENTS = "Students",
     PARTNERS = "Partners",
