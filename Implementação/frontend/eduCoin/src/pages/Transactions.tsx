@@ -1,6 +1,6 @@
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import NavBar from "../components/NavBar";
 import { useForm } from "../hooks/useForm";
 import Modal from "../components/Modal";
@@ -26,6 +26,8 @@ const Transactions = () => {
 
   const [transactions, setTransactions] = useState([]);
   const [students, setStudents] = useState<any>([]);
+
+  const role = useMemo(() => window.localStorage.get("role"), []);
 
   const getBalance = async () => {
     const res = await axios
@@ -96,13 +98,13 @@ const Transactions = () => {
     <Grid container xs={12}>
       <NavBar pageName={"Transações"} />
       <Grid container spacing={5} sx={{ p: 5 }}>
-        {
+        {role != "student" ? (
           <Grid item xs={12}>
             <Button variant="contained" onClick={transactionModal.open}>
               Nova Transação
             </Button>
           </Grid>
-        }
+        ) : null}
         <Grid item xs={12}>
           <Typography variant="h6" sx={{ color: "black" }}>
             Saldo atual: {currentBalance} moedas
