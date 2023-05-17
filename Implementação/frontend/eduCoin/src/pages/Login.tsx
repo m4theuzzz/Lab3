@@ -22,6 +22,7 @@ const Login = () => {
       console.log(logedIn.data)
       window.localStorage.setItem('apiKey', logedIn.data.sessionToken)
       window.localStorage.setItem('userId', logedIn.data.user.id)
+      window.localStorage.setItem('role', logedIn.data.user.role) // "student", "partner", "teacher"
       window.location.href = "http://localhost:5173";
     } catch { }
   };

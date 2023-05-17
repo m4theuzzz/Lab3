@@ -1,8 +1,11 @@
 import { AppBar, Button, Toolbar, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 const NavBar = ({ pageName }: any) => {
+
+  const role = useMemo(() => window.localStorage.get('role'), [])
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -19,7 +22,7 @@ const NavBar = ({ pageName }: any) => {
             Alunos
           </Button>
         </Link>
-        <Link to={"/partners"}>
+        {role == 'teacher' ? <Link to={"/partners"}>
           <Button
             sx={{
               color: "white",
@@ -28,8 +31,8 @@ const NavBar = ({ pageName }: any) => {
           >
             Parceiros
           </Button>
-        </Link>
-        <Link to={"/beneficios"}>
+        </Link> : null}
+        {role == 'partner' ? <Link to={"/beneficios"}>
           <Button
             sx={{
               color: "white",
@@ -38,8 +41,8 @@ const NavBar = ({ pageName }: any) => {
           >
             Benefícios
           </Button>
-        </Link>
-        <Link to={"/transactions"}>
+        </Link> : null}
+        {role != 'partner' ? <Link to={"/transactions"}>
           <Button
             sx={{
               color: "white",
@@ -48,7 +51,7 @@ const NavBar = ({ pageName }: any) => {
           >
             Transações
           </Button>
-        </Link>
+        </Link> : null}
         <Link to={"/login"}>
           <Button sx={{ color: "white" }}>Sair</Button>
         </Link>

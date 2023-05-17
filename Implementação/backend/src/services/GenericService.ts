@@ -6,7 +6,7 @@ import { TablesNames, QueryBuildView, QueryTypes } from "../views/QueryBuildView
 class GenericService {
     execute = Database.executeQuery;
 
-    constructor(execute = Database.executeQuery) {
+    constructor(execute = this.execute) {
         this.execute = execute
     }
 

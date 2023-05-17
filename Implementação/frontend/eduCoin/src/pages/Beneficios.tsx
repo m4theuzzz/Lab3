@@ -9,7 +9,8 @@ import useModal from "../hooks/useModal";
 
 const defaultBeneficioValues = {
   description: "",
-  value: 0
+  value: 0,
+  photo: "",
 };
 
 const Beneficios = () => {
@@ -39,6 +40,16 @@ const Beneficios = () => {
     } catch (error) {
       alert("Erro: " + error);
     }
+  };
+
+  const handleFileInput = (e: any) => {
+    const file = e.target.files[0];
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      handleChange("photo")(reader.result);
+    };
   };
 
   const handleAddBeneficio = async () => {
@@ -121,8 +132,8 @@ const Beneficios = () => {
               />
             </Grid>
             <Grid item xs={12}>
-                <Typography mb={2}>Foto</Typography>
-             <input type="file" />
+              <Typography mb={2}>Foto</Typography>
+              <input type="file" onChange={handleFileInput} />
             </Grid>
           </Grid>
           <Grid
