@@ -4,11 +4,37 @@ import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
 import { TransactionRaw, processTransaction } from '../views/TransactionView';
 import { TransactionService } from '../services/TransactionService';
-import { getTargetNewBalance } from '../modules/Utils';
+import { AccessView } from '../views/AccessView';
+import { StudentRaw } from '../views/StudentView';
 
 export const route = Router();
 const service = new GenericService();
 const operations = new TransactionService();
+
+export async function getTargetNewBalance(access: AccessView, targetId: number, transaction: TransactionRaw, tableName: TablesNames): Promise<number> {
+    const target = (await service.select<StudentRaw[]>(
+        access,
+        tableName,
+        { id: targetId }
+    ))[0];
+
+    if (!target) {
+        throw new Error("Destinatário inválido.");
+    }
+
+    let value = 0;
+    if (transaction.type == "credit") {
+        value = Number(target.balance) + Number(transaction.value);
+    } else {
+        value = Number(target.balance) - Number(transaction.value);
+    }
+
+    if (value < 0) {
+        throw new Error("Operação inválida. Não há creditos suficientes.");
+    }
+
+    return value;
+}
 
 route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
@@ -40,10 +66,12 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
 
         if (!req.body.value || req.body.value < 1) {
             res.status(400).send("Valor inválido.");
+            return;
         }
 
         if (!req.body.description || req.body.description == "") {
             res.status(400).send("Descrição inválida.");
+            return;
         }
 
         const insertion = await service.create(

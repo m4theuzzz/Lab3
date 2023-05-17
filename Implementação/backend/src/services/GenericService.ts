@@ -1,12 +1,12 @@
-import Database from "../modules/Database"
 import { filterObject, verifyIntegrity } from "../modules/Utils";
 import { AccessView } from "../views/AccessView";
-import { TablesNames, QueryBuildView, QueryTypes } from "../views/QueryBuildView"
+import { TablesNames, QueryBuildView, QueryTypes } from "../views/QueryBuildView";
+import { Database } from "../modules/Database";
 
 class GenericService {
     execute = Database.executeQuery;
 
-    constructor(execute = this.execute) {
+    constructor(execute = Database.executeQuery) {
         this.execute = execute
     }
 

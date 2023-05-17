@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const NavBar = ({ pageName }: any) => {
 
-  const role = useMemo(() => window.localStorage.get('role'), [])
+  const role = useMemo(() => window.localStorage.getItem('role'), [])
 
   return (
     <AppBar position="static">
@@ -12,7 +12,7 @@ const NavBar = ({ pageName }: any) => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <strong>EduCoin - </strong> {pageName}
         </Typography>
-        <Link to={"/"}>
+        {role == 'teacher' ? <Link to={"/"}>
           <Button
             sx={{
               color: "white",
@@ -21,7 +21,7 @@ const NavBar = ({ pageName }: any) => {
           >
             Alunos
           </Button>
-        </Link>
+        </Link> : null}
         {role == 'teacher' ? <Link to={"/partners"}>
           <Button
             sx={{
@@ -32,7 +32,7 @@ const NavBar = ({ pageName }: any) => {
             Parceiros
           </Button>
         </Link> : null}
-        {role == 'partner' ? <Link to={"/beneficios"}>
+        {role == 'partner' || role == 'student' ? <Link to={"/beneficios"}>
           <Button
             sx={{
               color: "white",

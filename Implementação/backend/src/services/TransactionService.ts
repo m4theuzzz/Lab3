@@ -1,4 +1,4 @@
-import Database from "../modules/Database";
+import { Database } from "../modules/Database";
 import { AccessView } from "../views/AccessView";
 import { TablesNames } from "../views/QueryBuildView";
 import { TransactionRaw } from "../views/TransactionView";

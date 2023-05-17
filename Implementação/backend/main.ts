@@ -4,7 +4,7 @@ import * as express from 'express';
 import * as session from 'express-session';
 import * as cors from 'cors';
 
-import Database from './src/modules/Database';
+import { Database } from './src/modules/Database';
 import { randomUUID } from 'crypto';
 
 const app = express();

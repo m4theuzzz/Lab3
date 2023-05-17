@@ -1,9 +1,8 @@
-import Database from '../modules/Database';
+import { Database } from '../modules/Database';
 import { processUser } from '../views/UsersView';
 import { Security } from '../modules/Security';
 import { RequestException } from '../views/RequestExceptionView';
 import { AccessView } from '../views/AccessView';
-import { findRole } from '../modules/Utils';
 
 class AuthService {
     static authorize = async (email: string, password: string) => {
@@ -15,7 +14,7 @@ class AuthService {
             throw { status: 404, message: "Email não cadastrado." } as RequestException;
         }
 
-        const role = await findRole(user.id);
+        const role = await Database.findRole(user.id);
 
         const userView = processUser(user);
         console.log(Security.AESDecrypt(user.password), password)

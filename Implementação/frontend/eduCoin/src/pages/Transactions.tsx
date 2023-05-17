@@ -27,13 +27,13 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [students, setStudents] = useState<any>([]);
 
-  const role = useMemo(() => window.localStorage.get("role"), []);
+  const role = useMemo(() => window.localStorage.getItem("role"), []);
 
   const getBalance = async () => {
     const res = await axios
       .get(
         "http://localhost:3000/teachers" +
-          `?user_id=${window.localStorage.getItem("userId")}`,
+        `?user_id=${window.localStorage.getItem("userId")}`,
         {
           headers: {
             "session-token": window.localStorage.getItem("apiKey"),
@@ -162,17 +162,16 @@ const Transactions = () => {
         <Grid item xs={12}>
           {transactions.length
             ? transactions.map((transaction: any) => (
-                <Grid item>
-                  <BasicCard
-                    title={`R$ ${transaction.value}`}
-                    subtitle={`${transaction.description} | para ${
-                      students.find(
-                        (student: any) => student.id == transaction.target
-                      )?.name
+              <Grid item>
+                <BasicCard
+                  title={`R$ ${transaction.value}`}
+                  subtitle={`${transaction.description} | para ${students.find(
+                    (student: any) => student.id == transaction.target
+                  )?.name
                     }`}
-                  />
-                </Grid>
-              ))
+                />
+              </Grid>
+            ))
             : null}
         </Grid>
       </Grid>

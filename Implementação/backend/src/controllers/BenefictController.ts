@@ -3,7 +3,7 @@ import GenericService from '../services/GenericService';
 import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
 import { BenefictRaw, processBenefict } from '../views/BenefictView';
-import { findRole } from '../modules/Utils';
+import { Database } from '../modules/Database';
 
 export const route = Router();
 const service = new GenericService();
@@ -51,7 +51,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
             return;
         }
 
-        if (await findRole(Number(req.sessionID)) !== "partner") {
+        if (await Database.findRole(Number(req.sessionID)) !== "partner") {
             res.status(403).send("Você não possui permissão para realizar essa ação.");
             return;
         }
@@ -61,7 +61,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
                 userId: Number(req.sessionID),
             },
             TablesNames.BENEFICTS,
-            req.body
+            { ...req.body, user_id: req.sessionID }
         ).catch(error => {
             err = error
             res.status(error.status ?? 500).send(error.sqlMessage);
@@ -104,7 +104,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
             return;
         }
 
-        if (await findRole(Number(req.sessionID)) !== "partner") {
+        if (await Database.findRole(Number(req.sessionID)) !== "partner") {
             res.status(403).send("Você não possui permissão para realizar essa ação.");
             return;
         }
@@ -140,7 +140,7 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
             return res.status(400).send("O ID do usuário precisar ser passado como parâmetro na query.");
         }
 
-        if (await findRole(Number(req.sessionID)) !== "partner") {
+        if (await Database.findRole(Number(req.sessionID)) !== "partner") {
             res.status(403).send("Você não possui permissão para realizar essa ação.");
             return;
         }

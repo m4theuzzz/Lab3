@@ -1,6 +1,6 @@
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BasicCard from "../components/Card";
 import Modal from "../components/Modal";
 import NavBar from "../components/NavBar";
@@ -15,6 +15,8 @@ const defaultBeneficioValues = {
 
 const Beneficios = () => {
   const [beneficios, setBeneficios] = useState([]);
+
+  const role = useMemo(() => window.localStorage.getItem("role"), []);
 
   const { values, handleChange, setValues } = useForm(
     defaultBeneficioValues,
@@ -100,11 +102,11 @@ const Beneficios = () => {
     <Grid>
       <NavBar pageName={"Benefícios"} />
       <Grid container spacing={5} sx={{ p: 5 }}>
-        <Grid item xs={12}>
+        {role != 'student' ? <Grid item xs={12}>
           <Button onClick={beneficioModal.open} variant="contained">
             Novo Benefício
           </Button>
-        </Grid>
+        </Grid> : null}
         <Modal
           open={beneficioModal.isOpen}
           close={() => {
@@ -148,8 +150,8 @@ const Beneficios = () => {
         {beneficios.map((beneficio: any) => (
           <Grid item>
             <BasicCard
-              title={beneficio.name}
-              subtitle={`${beneficio.email} | ${beneficio.sector}`}
+              title={beneficio.id}
+              subtitle={`${beneficio.description} | ${beneficio.value}`}
               action={() => handleOpenEdit(beneficio)}
               action2={() => handleDeleteBeneficio(beneficio.id)}
               actionText={"Editar"}

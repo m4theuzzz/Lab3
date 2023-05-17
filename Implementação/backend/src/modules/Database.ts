@@ -3,10 +3,13 @@ import { createConnection, Connection } from 'mysql';
 import { QueryBuildView, QueryTypes } from '../views/QueryBuildView';
 import { RequestException } from '../views/RequestExceptionView';
 import { escape } from './Utils';
+import { TeacherRaw } from '../views/TeacherView';
+import { StudentRaw } from '../views/StudentView';
+import { PartnerRaw } from '../views/PartnerView';
 
 let connection: Connection;
 
-class Database {
+export class Database {
     static connectMysql(newCon: Connection = null) {
         if (!!newCon) {
             return connection = newCon;
@@ -176,6 +179,30 @@ class Database {
             throw error;
         }
     }
-}
 
-export default Database;
+    static findRole = async (userId: number): Promise<string> => {
+        const teacherQuery = `SELECT * FROM Teachers WHERE user_id=${userId};`;
+        const studentQuery = `SELECT * FROM Students WHERE user_id=${userId};`;
+        const partnerQuery = `SELECT * FROM Partners WHERE user_id=${userId};`;
+
+        const teacher = (await Database.executeQuery<TeacherRaw[]>(teacherQuery))[0];
+
+        if (!!teacher) {
+            return "teacher";
+        }
+
+        const student = (await Database.executeQuery<StudentRaw[]>(studentQuery))[0];
+
+        if (!!student) {
+            return "student";
+        }
+
+        const partner = (await Database.executeQuery<PartnerRaw[]>(partnerQuery))[0];
+
+        if (!!partner) {
+            return "partner";
+        }
+
+        throw new Error("Usuário não encontrado.");
+    }
+}
