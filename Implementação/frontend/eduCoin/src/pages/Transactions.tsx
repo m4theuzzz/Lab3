@@ -29,14 +29,18 @@ const Transactions = () => {
 
   const getBalance = async () => {
     const res = await axios
-      .get("http://localhost:3000/teachers" + `?user_id=${window.localStorage.getItem("userId")}`, {
-        headers: {
-          "session-token": window.localStorage.getItem("apiKey"),
-        },
-      })
+      .get(
+        "http://localhost:3000/teachers" +
+          `?user_id=${window.localStorage.getItem("userId")}`,
+        {
+          headers: {
+            "session-token": window.localStorage.getItem("apiKey"),
+          },
+        }
+      )
       .then((res) => res.data);
 
-    console.log(res)
+    console.log(res);
     setCurrentBalance(res[0].balance);
   };
 
@@ -61,9 +65,8 @@ const Transactions = () => {
       })
       .then((res) => res.data);
 
-    setStudents(res)
-
-  }
+    setStudents(res);
+  };
 
   const handleAddTransaction = async () => {
     try {
@@ -86,18 +89,20 @@ const Transactions = () => {
   useEffect(() => {
     getBalance();
     getTransactions();
-    getStudents()
+    getStudents();
   }, []);
 
   return (
     <Grid container xs={12}>
       <NavBar pageName={"Transações"} />
       <Grid container spacing={5} sx={{ p: 5 }}>
-        <Grid item xs={12}>
-          <Button variant="contained" onClick={transactionModal.open}>
-            Nova Transação
-          </Button>
-        </Grid>
+        {
+          <Grid item xs={12}>
+            <Button variant="contained" onClick={transactionModal.open}>
+              Nova Transação
+            </Button>
+          </Grid>
+        }
         <Grid item xs={12}>
           <Typography variant="h6" sx={{ color: "black" }}>
             Saldo atual: {currentBalance} moedas
@@ -155,13 +160,17 @@ const Transactions = () => {
         <Grid item xs={12}>
           {transactions.length
             ? transactions.map((transaction: any) => (
-              <Grid item>
-                <BasicCard
-                  title={`R$ ${transaction.value}`}
-                  subtitle={`${transaction.description} | para ${students.find((student: any) => student.id == transaction.target)?.name}`}
-                />
-              </Grid>
-            ))
+                <Grid item>
+                  <BasicCard
+                    title={`R$ ${transaction.value}`}
+                    subtitle={`${transaction.description} | para ${
+                      students.find(
+                        (student: any) => student.id == transaction.target
+                      )?.name
+                    }`}
+                  />
+                </Grid>
+              ))
             : null}
         </Grid>
       </Grid>

@@ -30,7 +30,7 @@ const Beneficios = () => {
 
   const handleDeleteBeneficio = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/partners?id=${id}`, {
+      await axios.delete(`http://localhost:3000/beneficts?id=${id}`, {
         headers: {
           "session-token": window.localStorage.getItem("apiKey"),
         },
@@ -58,7 +58,7 @@ const Beneficios = () => {
     try {
       if (isEdit) {
         const res = await axios
-          .put(`http://localhost:3000/partners?id=${values.id}`, values, {
+          .put(`http://localhost:3000/beneficts?id=${values.id}`, values, {
             headers: {
               "session-token": window.localStorage.getItem("apiKey"),
             },
@@ -66,7 +66,7 @@ const Beneficios = () => {
           .then((res) => res.data);
       } else {
         const res = await axios
-          .post("http://localhost:3000/partners", values, {
+          .post("http://localhost:3000/beneficts", values, {
             headers: {
               "session-token": window.localStorage.getItem("apiKey"),
             },
@@ -82,7 +82,7 @@ const Beneficios = () => {
 
   const getBeneficios = async () => {
     const res = await axios
-      .get("http://localhost:3000/partners", {
+      .get("http://localhost:3000/beneficts", {
         headers: {
           "session-token": window.localStorage.getItem("apiKey"),
         },
