@@ -51,6 +51,7 @@ import { route as StudentController } from './src/controllers/StudentController'
 import { route as TeacherController } from './src/controllers/TeacherController';
 import { route as TransactionController } from './src/controllers/TransactionController';
 import { route as BenefictController } from './src/controllers/BenefictController';
+import { route as BoughtBenefictController } from './src/controllers/BoughtBenefictController';
 
 app.use('/auth', AuthController);
 app.use('/users', UserController);
@@ -59,6 +60,7 @@ app.use('/students', StudentController);
 app.use('/teachers', TeacherController);
 app.use('/transactions', TransactionController);
 app.use('/beneficts', BenefictController);
+app.use('/beneficts', BoughtBenefictController);
 
 app.listen(process.env.API_PORT, async () => {
     Database.connectMysql();

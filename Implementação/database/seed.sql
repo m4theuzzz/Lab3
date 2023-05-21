@@ -11,7 +11,7 @@ INSERT INTO Users (
 ), (
     "aluno 1",
     "5jNJIzhpDrYyxsPzS0Wvfwzx4e6Awr4+E35610gU4RLHoQSkfEXWVD5CK3DQfxBu3NwEjMsSwVidySHTK0hitvi/Cr7pkAy+AfAalE6wVJXlu6zZkBv9Eg/vIlAycVJr2zN4",
-    "aluno@test.com"
+    "matvsan@gmail.com"
 ), (
     "parceiro 1",
     "5jNJIzhpDrYyxsPzS0Wvfwzx4e6Awr4+E35610gU4RLHoQSkfEXWVD5CK3DQfxBu3NwEjMsSwVidySHTK0hitvi/Cr7pkAy+AfAalE6wVJXlu6zZkBv9Eg/vIlAycVJr2zN4",
@@ -81,4 +81,18 @@ INSERT INTO Teachers (
     1,
     321,
     "Ciências Exatas"
+);
+
+INSERT INTO Transactions (
+    type,
+    value,
+    description,
+    origin,
+    target
+) VALUES (
+    "credit",
+    1000,
+    "Valor inicial",
+    1,
+    1
 );

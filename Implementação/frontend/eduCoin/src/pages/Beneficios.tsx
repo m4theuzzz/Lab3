@@ -25,6 +25,8 @@ const Beneficios = () => {
 
   const beneficioModal = useModal();
 
+  console.log(values)
+
   const handleOpenEdit = (beneficio) => {
     setValues(beneficio);
     beneficioModal.open(true);
@@ -152,6 +154,7 @@ const Beneficios = () => {
             <BasicCard
               title={beneficio.id}
               subtitle={`${beneficio.description} | ${beneficio.value}`}
+              img={beneficio.photo}
               action={() => handleOpenEdit(beneficio)}
               action2={() => handleDeleteBeneficio(beneficio.id)}
               actionText={"Editar"}

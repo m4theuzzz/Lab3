@@ -10,12 +10,14 @@ const service = new GenericService();
 
 route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
+        const role = (await Database.findRole(Number(req.sessionID)))
+        const querys = role == "partner" ? { ...req.query, user_id: req.sessionID } : req.query;
         const rawBeneficts = await service.select<BenefictRaw[]>(
             {
                 userId: Number(req.sessionID),
             },
             TablesNames.BENEFICTS,
-            req.query
+            querys
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
@@ -162,7 +164,7 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
         if (update.affectedRows > 0) {
             res.status(200).send("Benefício removido com sucesso.");
         } else {
-            res.status(401).send("O benefício solicitado não foi encontrado.");
+            res.status(404).send("O benefício solicitado não foi encontrado.");
         }
     } catch (error) {
         res.status(error.status ?? 500).send(error.message);

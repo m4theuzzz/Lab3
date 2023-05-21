@@ -1,9 +1,11 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
   Typography,
+  styled,
 } from "@mui/material";
 
 const BasicCard = ({
@@ -14,6 +16,7 @@ const BasicCard = ({
   actionText,
   action2Text,
   action2,
+  img,
 }: any) => {
   return (
     <Card sx={{ width: 275 }}>
@@ -21,9 +24,13 @@ const BasicCard = ({
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {subtitle}
         </Typography>
-        <Typography variant="h5" component="div">
-          {title}
-        </Typography>
+        {!!img ?
+          <ImageWrapper src={img} />
+          :
+          <Typography variant="h5" component="div">
+            {title}
+          </Typography>
+        }
 
         <Typography variant="body2">{content}</Typography>
       </CardContent>
@@ -40,3 +47,8 @@ const BasicCard = ({
 };
 
 export default BasicCard;
+
+const ImageWrapper = styled('img')(() => ({
+  maxWidth: 230,
+  borderRadius: '15px'
+}))

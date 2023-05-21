@@ -32,7 +32,7 @@ const Transactions = () => {
   const getBalance = async () => {
     const res = await axios
       .get(
-        "http://localhost:3000/teachers" +
+        "http://localhost:3000/" + role + "s" +
         `?user_id=${window.localStorage.getItem("userId")}`,
         {
           headers: {

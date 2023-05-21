@@ -30,6 +30,9 @@ services:
       - DB_NAME=lab_db
       - KEY=c@esuis-jAhm*uq-qimte&x
       - ENV=dev #change to prod on deploy
+      - SMTP=smtp.gmail.com
+      - APP_EMAIL=overseercompany@gmail.com
+      - APP_EMAIL_PASS=dahZyb-5rabsy-xivxup
     depends_on:
       - lab_database
   lab_database:

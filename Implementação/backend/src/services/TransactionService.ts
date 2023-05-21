@@ -26,4 +26,12 @@ export class TransactionService {
         }
     }
 
+    async buy(access: AccessView, targetId: number, newBalance: number) {
+        try {
+            await this.operate(access.userId, newBalance, TablesNames.STUDENTS);
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }

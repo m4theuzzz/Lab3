@@ -88,3 +88,15 @@ CREATE TABLE IF NOT EXISTS Beneficts (
     FOREIGN KEY (user_id) REFERENCES Users(id),
     PRIMARY KEY(id)
 );
+
+CREATE TABLE IF NOT EXISTS BoughtBeneficts (
+    id varchar(36) not null unique default (uuid()),
+    benefict_id bigint not null,
+    user_id bigint not null,
+    value int not null,
+    created_at datetime not null default current_timestamp,
+    updated_at datetime not null default current_timestamp on update current_timestamp,
+    FOREIGN KEY (benefict_id) REFERENCES Beneficts(id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    PRIMARY KEY(benefict_id, user_id)
+);

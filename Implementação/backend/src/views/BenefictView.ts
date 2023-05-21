@@ -30,7 +30,6 @@ export const processBenefict = (rawBenefict: BenefictRaw): BenefictView => ({
 
 export const BenefictProperties = () => ({
     required: [
-        "userId",
         "value",
         "description",
         "photo",

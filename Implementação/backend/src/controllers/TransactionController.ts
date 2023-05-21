@@ -6,6 +6,7 @@ import { TransactionRaw, processTransaction } from '../views/TransactionView';
 import { TransactionService } from '../services/TransactionService';
 import { AccessView } from '../views/AccessView';
 import { StudentRaw } from '../views/StudentView';
+import { RequestException } from '../views/RequestExceptionView';
 
 export const route = Router();
 const service = new GenericService();
@@ -15,11 +16,11 @@ export async function getTargetNewBalance(access: AccessView, targetId: number, 
     const target = (await service.select<StudentRaw[]>(
         access,
         tableName,
-        { id: targetId }
+        { user_id: targetId }
     ))[0];
 
     if (!target) {
-        throw new Error("Destinatário inválido.");
+        throw { status: 404, message: "Destinatário não encontrado" } as RequestException;
     }
 
     let value = 0;
@@ -30,7 +31,7 @@ export async function getTargetNewBalance(access: AccessView, targetId: number, 
     }
 
     if (value < 0) {
-        throw new Error("Operação inválida. Não há creditos suficientes.");
+        throw { status: 400, message: "Operação inválida. Não há creditos suficientes." } as RequestException;
     }
 
     return value;
@@ -159,7 +160,7 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
         if (update.affectedRows > 0) {
             res.status(200).send("Transação removida com sucesso.");
         } else {
-            res.status(401).send("A transação solicitada não foi encontrada.");
+            res.status(404).send("A transação solicitada não foi encontrada.");
         }
     } catch (error) {
         res.status(error.status ?? 500).send(error.message);
