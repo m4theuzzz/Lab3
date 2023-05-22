@@ -1,0 +1,74 @@
+///////////// GET BOUGHT BENEFICTS //////////////
+
+title Get Bought Benefits
+
+Actor Student as S
+
+S ->+ Frontend: Solicita lista de benefícios comprados
+
+Frontend ->+ BoughtBenefictsController: GET /beneficts/bought
+
+BoughtBenefictsController ->+ Middleware: authMiddleware()
+Middleware -->- BoughtBenefictsController: sessionId
+
+BoughtBenefictsController ->+ GenericService: select()
+GenericService -> GenericService: filterObject()
+GenericService ->+ Database: buildQuery()
+Database -->- GenericService: query string
+GenericService ->+ Database: executeQuery()
+Database -->- GenericService: BoughtBenefictsRaw list
+
+
+GenericService -> GenericService: processBoughtBenefict()
+GenericService -->- BoughtBenefictsController: BoughtBeneficts list
+
+BoughtBenefictsController ->- Frontend: BoughtBeneficts json array
+Frontend -->- S:
+
+///////////// BUY BENEFICT //////////////
+
+title Buy Benefits
+
+Actor Student as S
+
+S ->+ Frontend: Solicita compra de um benefício
+
+Frontend ->+ BoughtBenefictsController: POST /beneficts/buy
+
+BoughtBenefictsController ->+ Middleware: authMiddleware()
+Middleware -->- BoughtBenefictsController: sessionId
+
+BoughtBenefictsController ->+ Database: findRole()
+Database  -->- BoughtBenefictsController: user role
+
+BoughtBenefictsController -> BoughtBenefictsController: validate role
+BoughtBenefictsController -> BoughtBenefictsController: getTargetNewBalance()
+
+BoughtBenefictsController ->+ GenericService: create()
+GenericService -> GenericService: filterObject()
+GenericService -> GenericService: verifyIntegrity()
+GenericService -> GenericService: buildColumnsAndValuesArray()
+
+GenericService ->+ Database: buildQuery()
+Database -->- GenericService: query string
+GenericService ->+ Database: executeQuery()
+Database -->- GenericService: affectedRows
+GenericService -->- BoughtBenefictsController: affectedRows
+
+BoughtBenefictsController ->+ TransactionService: buy()
+TransactionService -> TransactionService: operate()
+TransactionService ->+ Database: executeQuery()
+Database -->- TransactionService: affectedRows
+TransactionService -->- BoughtBenefictsController:
+
+BoughtBenefictsController ->+ GenericService: getLastInsertedItem()
+GenericService -->- BoughtBenefictsController: last inserted item id
+
+BoughtBenefictsController ->+ GenericService: select()
+GenericService -->- BoughtBenefictsController: user info
+
+BoughtBenefictsController -> MailerService: sendMail()
+MailerService -> Mailer: sendMessage()
+
+BoughtBenefictsController ->- Frontend: Id do objeto inserido
+Frontend -->- S: Compra realizada com sucesso

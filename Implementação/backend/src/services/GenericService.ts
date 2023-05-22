@@ -53,7 +53,6 @@ class GenericService {
         queryOptions.values = values;
 
         const query = Database.buildQuery(queryOptions);
-        console.log(query)
 
         return this.execute<any>(query);
     }
