@@ -31,15 +31,15 @@ const Beneficios = () => {
     {}
   );
 
- 
+
 
   const getBalance = async () => {
     const res = await axios
       .get(
         "http://localhost:3000/" +
-          role +
-          "s" +
-          `?user_id=${window.localStorage.getItem("userId")}`,
+        role +
+        "s" +
+        `?user_id=${window.localStorage.getItem("userId")}`,
         {
           headers: {
             "session-token": window.localStorage.getItem("apiKey"),
@@ -48,14 +48,11 @@ const Beneficios = () => {
       )
       .then((res) => res.data);
 
-    console.log(res);
     setCurrentBalance(res[0].balance);
   };
 
   const beneficioModal = useModal();
   const beneficioBuyModal = useModal();
-
-  console.log(values);
 
   const handleOpenEdit = (beneficio) => {
     setValues(beneficio);
@@ -69,7 +66,7 @@ const Beneficios = () => {
 
   const handleBuyBeneficio = async (valuesBeneficio) => {
     try {
-      const res = await axios
+      await axios
         .post(
           "http://localhost:3000/beneficts/buy",
           { value: valuesBeneficio.value, benefict_id: valuesBeneficio.id },
@@ -80,6 +77,11 @@ const Beneficios = () => {
           }
         )
         .then((res) => res.data);
+
+      getBalance();
+      getBeneficios();
+      getMyBeneficios();
+      beneficioBuyModal.open(false);
     } catch (err) {
       alert(err);
     }
@@ -158,14 +160,12 @@ const Beneficios = () => {
       })
       .then((res) => res.data);
 
-      console.log('XABL22AU', res);
-
     setMyBeneficios(res);
   };
 
   useEffect(() => {
-    getBeneficios();
     getBalance();
+    getBeneficios();
     getMyBeneficios();
   }, []);
 
@@ -266,7 +266,7 @@ const Beneficios = () => {
                         ? () => handleOpenBuy(beneficio)
                         : () => handleOpenEdit(beneficio)
                     }
-                    disabled={myBeneficios.map((bene:any)=> bene.id).includes(beneficio.id)}
+                    disabled={myBeneficios.map((bene: any) => bene.id).includes(beneficio.id)}
                     action2={() => handleDeleteBeneficio(beneficio.id)}
                     actionText={role == "student" ? "Comprar" : "Editar"}
                     action2Text={role == "student" ? " " : "Excluir"}

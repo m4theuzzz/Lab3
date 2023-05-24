@@ -84,7 +84,6 @@ const Students = () => {
         "session-token": window.localStorage.getItem('apiKey')
       }
     }).then((res) => res.data);
-    console.log(res)
     setStudents(res);
   };
 

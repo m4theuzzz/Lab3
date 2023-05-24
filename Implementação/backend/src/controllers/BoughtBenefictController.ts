@@ -21,6 +21,7 @@ route.get('/bought', authMiddleware, async (req: Request, res: Response) => {
         const rawBoughtBeneficts = await service.select<BoughtBenefictRaw[]>(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.BOUGHT_BENEFICTS,
             { user_id: req.sessionID }
@@ -31,12 +32,13 @@ route.get('/bought', authMiddleware, async (req: Request, res: Response) => {
         const rawBeneficts = await service.select<BenefictRaw[]>(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.BENEFICTS,
-            { user_id: req.sessionID }
+            {}
         );
 
-        if (!rawBoughtBeneficts) {
+        if (!rawBoughtBeneficts || !rawBeneficts) {
             return;
         }
 
@@ -44,8 +46,8 @@ route.get('/bought', authMiddleware, async (req: Request, res: Response) => {
             const benefict = rawBeneficts.find(b => b.id === boughtBenefict.benefict_id);
             return {
                 ...processBoughtBenefict(boughtBenefict),
-                photo: benefict.photo,
-                description: benefict.description
+                photo: benefict?.photo,
+                description: benefict?.description
             }
         });
 
@@ -66,10 +68,10 @@ route.post('/buy', authMiddleware, async (req: Request, res: Response) => {
 
         const access = { userId: Number(req.sessionID) };
         const newBalance = await getTargetNewBalance(access, access.userId, { ...req.body, type: "debit" }, TablesNames.STUDENTS);
-
         const insertion = await service.create(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.BOUGHT_BENEFICTS,
             { ...req.body, user_id: req.sessionID }
@@ -125,6 +127,7 @@ route.delete('/refund', authMiddleware, async (req: Request, res: Response) => {
         const deleted = await service.remove(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.BOUGHT_BENEFICTS,
             String(req.query.id)

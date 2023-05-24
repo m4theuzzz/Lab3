@@ -15,6 +15,7 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
         const rawBeneficts = await service.select<BenefictRaw[]>(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.BENEFICTS,
             querys
@@ -61,6 +62,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         const insertion = await service.create(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.BENEFICTS,
             { ...req.body, user_id: req.sessionID }
@@ -114,6 +116,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
         const update = await service.update(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.BENEFICTS,
             String(req.query.id),
@@ -150,6 +153,7 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
         const update = await service.remove(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.BENEFICTS,
             String(req.query.id)

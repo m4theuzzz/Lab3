@@ -54,7 +54,7 @@ export function useForm(initialFValues: any, validations: any, editId?: any) {
           if (saveDescription) {
             newFormValues[prop + "Visual"] = newVal;
           }
-          console.log(newFormValues)
+
           setValues({ ...values, ...newFormValues });
         }
       };

@@ -49,7 +49,7 @@ export class Security {
         return decipher.update(encrypted) + decipher.final('utf8');
     }
 
-    static JWTEncrypt(userData: User) {
+    static JWTEncrypt(userData: any) {
         const expireDate = new Date();
         expireDate.setHours(expireDate.getHours() + 2);
 
@@ -58,6 +58,7 @@ export class Security {
                 userId: userData.id,
                 email: userData.email,
                 password: userData.password,
+                role: userData.role,
                 expireAt: expireDate
             },
             process.env.KEY

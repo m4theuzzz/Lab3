@@ -12,6 +12,7 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
         const rawAddresses = await service.select<AddressRaw[]>(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.ADDRESSES,
             req.query
@@ -37,6 +38,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         const insertion = await service.create(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.ADDRESSES,
             req.body
@@ -68,6 +70,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
         const update = await service.update(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.ADDRESSES,
             String(req.query.id),
@@ -98,6 +101,7 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
         const update = await service.remove(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.ADDRESSES,
             String(req.query.id)

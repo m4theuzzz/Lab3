@@ -15,6 +15,7 @@ route.post('/', async (req: Request, res: Response) => {
         const createUser = await service.create(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.USERS,
             { ...body, address_id: 1 }

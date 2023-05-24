@@ -17,6 +17,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         const createUser = await service.create(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.USERS,
             userBody
@@ -33,6 +34,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         const createTeachers = await service.create(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.TEACHERS,
             { ...body, user_id: createdUserId, address_id: 1 }

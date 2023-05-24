@@ -11,7 +11,7 @@ export class TransactionService {
     }
 
     private async operate(targetId: number, value: number, tableName: TablesNames) {
-        const query = `UPDATE ${tableName} SET balance=${value} where id=${targetId};`
+        const query = `UPDATE ${tableName} SET balance=${value} where user_id=${targetId};`
 
         return this.execute(query)
     }

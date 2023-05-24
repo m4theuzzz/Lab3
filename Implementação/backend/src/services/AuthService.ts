@@ -17,7 +17,6 @@ class AuthService {
         const role = await Database.findRole(user.id);
 
         const userView = processUser(user);
-        console.log(Security.AESDecrypt(user.password), password)
         if (Security.AESDecrypt(user.password) == password) {
             return {
                 "user": {
@@ -26,7 +25,7 @@ class AuthService {
                     "email": userView.email,
                     "role": role
                 },
-                "sessionToken": Security.JWTEncrypt(userView)
+                "sessionToken": Security.JWTEncrypt({ ...userView, role: role })
             };
         } else {
             throw { status: 400, message: "Senha incorreta." } as RequestException;
@@ -39,7 +38,7 @@ class AuthService {
 
             if (this.tokenIsValid(userData)) {
                 await this.authorize(userData.email, Security.AESDecrypt(userData.password));
-                return { userId: userData.userId } as AccessView;
+                return { userId: userData.userId, role: userData.role } as AccessView;
             }
         } catch (error) {
             throw error;

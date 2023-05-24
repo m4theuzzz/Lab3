@@ -1,3 +1,4 @@
 export interface AccessView {
-    userId: number
+    userId: number,
+    role?: string
 }

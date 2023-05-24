@@ -19,7 +19,6 @@ const Login = () => {
         values
       );
       //@ts-ignore
-      console.log(logedIn.data);
       window.localStorage.setItem("apiKey", logedIn.data.sessionToken);
       window.localStorage.setItem("userId", logedIn.data.user.id);
 
@@ -31,9 +30,9 @@ const Login = () => {
         teacher: "/",
         partner: "/beneficios",
       };
-      
+
       window.location.href = "http://localhost:5173" + redirects[userRole];
-    } catch {}
+    } catch { }
   };
 
   return (

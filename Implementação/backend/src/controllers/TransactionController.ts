@@ -39,12 +39,17 @@ export async function getTargetNewBalance(access: AccessView, targetId: number, 
 
 route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
+        const role = req.params.role;
+
+        const queryObject = role === "student" ? { ...req.query, target: req.sessionID } : { ...req.query, origin: req.sessionID }
+
         const rawTransactions = await service.select<TransactionRaw[]>(
             {
                 userId: Number(req.sessionID),
+                role: role
             },
             TablesNames.TRANSACTIONS,
-            req.query
+            queryObject
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
@@ -78,6 +83,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
         const insertion = await service.create(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.TRANSACTIONS,
             { ...req.body, origin: Number(req.sessionID) }
@@ -116,6 +122,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
         const update = await service.update(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.TRANSACTIONS,
             String(req.query.id),
@@ -146,6 +153,7 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
         const update = await service.remove(
             {
                 userId: Number(req.sessionID),
+                role: req.params.role
             },
             TablesNames.TRANSACTIONS,
             String(req.query.id)

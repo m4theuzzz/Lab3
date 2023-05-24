@@ -42,7 +42,6 @@ const Transactions = () => {
       )
       .then((res) => res.data);
 
-    console.log(res);
     setCurrentBalance(res[0].balance);
   };
 
@@ -135,8 +134,8 @@ const Transactions = () => {
                 endpoint="/students"
                 fullWidth
                 valueKey={values.target}
-                valueTag="id"
-                onChange={handleChangeDropdownValue("target", "id")}
+                valueTag="userId"
+                onChange={handleChangeDropdownValue("target", "userId")}
               />
             </Grid>
 
