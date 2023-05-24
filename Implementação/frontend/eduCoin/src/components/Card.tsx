@@ -12,6 +12,7 @@ const BasicCard = ({
   subtitle,
   title,
   content,
+  disabled,
   action,
   actionText,
   action2Text,
@@ -35,10 +36,10 @@ const BasicCard = ({
         <Typography variant="body2">{content}</Typography>
       </CardContent>
       <CardActions>
-        <Button onClick={action} size="small">
+        <Button disabled={disabled} onClick={action} size="small">
           {actionText}
         </Button>
-        <Button onClick={action2} size="small">
+        <Button disabled={disabled} onClick={action2} size="small">
           {action2Text}
         </Button>
       </CardActions>

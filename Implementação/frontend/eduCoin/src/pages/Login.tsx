@@ -19,12 +19,21 @@ const Login = () => {
         values
       );
       //@ts-ignore
-      console.log(logedIn.data)
-      window.localStorage.setItem('apiKey', logedIn.data.sessionToken)
-      window.localStorage.setItem('userId', logedIn.data.user.id)
-      window.localStorage.setItem('role', logedIn.data.user.role) // "student", "partner", "teacher"
-      window.location.href = "http://localhost:5173";
-    } catch { }
+      console.log(logedIn.data);
+      window.localStorage.setItem("apiKey", logedIn.data.sessionToken);
+      window.localStorage.setItem("userId", logedIn.data.user.id);
+
+      const userRole = logedIn.data.user.role;
+      window.localStorage.setItem("role", userRole); // "student", "partner", "teacher"
+
+      const redirects: any = {
+        student: "/beneficios",
+        teacher: "/",
+        partner: "/beneficios",
+      };
+      
+      window.location.href = "http://localhost:5173" + redirects[userRole];
+    } catch {}
   };
 
   return (
