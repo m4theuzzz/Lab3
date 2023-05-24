@@ -10,6 +10,7 @@ import { MailerService } from '../services/MailerService';
 import { StudentRaw } from '../views/StudentView';
 import { Email } from '../views/EmailView';
 import { UserRaw } from '../views/UsersView';
+import { BenefictRaw } from '../views/BenefictView';
 
 export const route = Router();
 const service = new GenericService();
@@ -27,11 +28,26 @@ route.get('/bought', authMiddleware, async (req: Request, res: Response) => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
 
+        const rawBeneficts = await service.select<BenefictRaw[]>(
+            {
+                userId: Number(req.sessionID),
+            },
+            TablesNames.BENEFICTS,
+            { user_id: req.sessionID }
+        );
+
         if (!rawBoughtBeneficts) {
             return;
         }
 
-        const boughtBeneficts = rawBoughtBeneficts.map(boughtBenefict => processBoughtBenefict(boughtBenefict));
+        const boughtBeneficts = rawBoughtBeneficts.map(boughtBenefict => {
+            const benefict = rawBeneficts.find(b => b.id === boughtBenefict.benefict_id);
+            return {
+                ...processBoughtBenefict(boughtBenefict),
+                photo: benefict.photo,
+                description: benefict.description
+            }
+        });
 
         res.status(200).send(boughtBeneficts);
     } catch (error) {
