@@ -21,6 +21,7 @@ const Login = () => {
       //@ts-ignore
       window.localStorage.setItem("apiKey", logedIn.data.sessionToken);
       window.localStorage.setItem("userId", logedIn.data.user.id);
+      window.localStorage.setItem("name", logedIn.data.user.name);
 
       const userRole = logedIn.data.user.role;
       window.localStorage.setItem("role", userRole); // "student", "partner", "teacher"

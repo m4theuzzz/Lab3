@@ -7,6 +7,8 @@ import Modal from "../components/Modal";
 import useModal from "../hooks/useModal";
 import BasicCard from "../components/Card";
 import DropdownAsync from "../components/DropdownAsync";
+import ReactPDF, { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import PdfRender from "../components/PdfRender";
 
 const defaultTransactionValues = {
   type: "credit",
@@ -87,6 +89,10 @@ const Transactions = () => {
     }
   };
 
+  const renderDownloadPDF = () => {
+    ReactPDF.render(<PdfRender />, './example.pdf')
+  }
+
   useEffect(() => {
     getBalance();
     getTransactions();
@@ -95,6 +101,9 @@ const Transactions = () => {
 
   return (
     <Grid container xs={12}>
+
+      <PDFViewer><PdfRender transactions={transactions} /></PDFViewer>
+
       <NavBar pageName={"Transações"} />
       <Grid container spacing={5} sx={{ p: 5 }}>
         {role != "student" ? (
@@ -102,8 +111,16 @@ const Transactions = () => {
             <Button variant="contained" onClick={transactionModal.open}>
               Nova Transação
             </Button>
+
           </Grid>
         ) : null}
+
+        <Grid item xs={12}>
+          <Button variant='contained'> <PDFDownloadLink style={{ color: 'white' }} document={<PdfRender transactions={transactions} />} fileName="somename.pdf">
+            {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Baixar Relatório de Transações')}
+          </PDFDownloadLink></Button>
+        </Grid>
+
         <Grid item xs={12}>
           <Typography variant="h6" sx={{ color: "black" }}>
             Saldo atual: {currentBalance} moedas
@@ -174,7 +191,7 @@ const Transactions = () => {
             : null}
         </Grid>
       </Grid>
-    </Grid>
+    </Grid >
   );
 };
 

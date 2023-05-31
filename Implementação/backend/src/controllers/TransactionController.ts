@@ -7,6 +7,7 @@ import { TransactionService } from '../services/TransactionService';
 import { AccessView } from '../views/AccessView';
 import { StudentRaw } from '../views/StudentView';
 import { RequestException } from '../views/RequestExceptionView';
+import { UserRaw } from '../views/UsersView';
 
 export const route = Router();
 const service = new GenericService();
@@ -58,7 +59,20 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
             return;
         }
 
-        const transactions = rawTransactions.map(transaction => processTransaction(transaction));
+        const rawUsers = (await service.select<UserRaw[]>({
+            userId: Number(req.sessionID)
+        }, TablesNames.USERS, {}).catch(error => {
+            res.status(error.status ?? 500).send(error.sqlMessage);
+        }));
+
+        if (!rawUsers) {
+            return;
+        }
+
+        const transactions = rawTransactions.map(transaction => {
+            const user = rawUsers.find(u => filter(role, transaction.origin, transaction.target, u.id));
+            return { ...processTransaction(transaction), ...user }
+        });
 
         res.status(200).send(transactions);
     } catch (error) {
@@ -174,3 +188,11 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
         res.status(error.status ?? 500).send(error.message);
     }
 });
+
+function filter(role: string, origin: number, target: number, test: number): boolean {
+    if (role === 'student') {
+        return origin === test
+    } else {
+        return target === test
+    }
+}
