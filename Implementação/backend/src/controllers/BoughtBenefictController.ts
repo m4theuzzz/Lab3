@@ -84,6 +84,28 @@ route.post('/buy', authMiddleware, async (req: Request, res: Response) => {
             return;
         }
 
+        const postTransaction = await service.create(
+            {
+                userId: Number(req.sessionID),
+                role: req.params.role
+            },
+            TablesNames.TRANSACTIONS,
+            {
+                origin: Number(req.sessionID),
+                target: Number(req.sessionID),
+                value: Number(req.body.value),
+                type: 'benefict',
+                description: 'Compra do benefício'
+            }
+        ).catch(error => {
+            err = error
+            res.status(error.status ?? 500).send(error.sqlMessage);
+        });
+
+        if (err) {
+            return;
+        }
+
         await operations.buy(access, access.userId, newBalance);
 
         const insertedId = (await service.getLastInsertedItem(TablesNames.BOUGHT_BENEFICTS))[0].id;

@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Partners (
 
 CREATE TABLE IF NOT EXISTS Transactions (
     id bigint not null auto_increment,
-    type enum('debit', 'credit') not null,
+    type enum('debit', 'credit', 'benefict') not null,
     value int not null default 0,
     description text default null,
     origin bigint not null,
