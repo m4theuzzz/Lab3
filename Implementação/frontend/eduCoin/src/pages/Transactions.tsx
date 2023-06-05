@@ -28,8 +28,11 @@ const Transactions = () => {
 
   const [transactions, setTransactions] = useState([]);
   const [students, setStudents] = useState<any>([]);
+  const [teachers, setTeachers] = useState<any>([]);
 
   const role = useMemo(() => window.localStorage.getItem("role"), []);
+  const userName = useMemo(() => window.localStorage.getItem("name"), []);
+
 
   const getBalance = async () => {
     const res = await axios
@@ -71,6 +74,18 @@ const Transactions = () => {
     setStudents(res);
   };
 
+  const getTeachers = async () => {
+    const res = await axios
+      .get("http://localhost:3000/teachers", {
+        headers: {
+          "session-token": window.localStorage.getItem("apiKey"),
+        },
+      })
+      .then((res) => res.data);
+
+    setTeachers(res);
+  };
+
   const handleAddTransaction = async () => {
     try {
       const res = await axios
@@ -97,6 +112,7 @@ const Transactions = () => {
     getBalance();
     getTransactions();
     getStudents();
+    getTeachers();
   }, []);
 
   return (
@@ -116,7 +132,7 @@ const Transactions = () => {
         ) : null}
 
         <Grid item xs={12}>
-          <Button variant='contained'> <PDFDownloadLink style={{ color: 'white' }} document={<PdfRender transactions={transactions} />} fileName="somename.pdf">
+          <Button variant='contained'> <PDFDownloadLink style={{ color: 'white' }} document={<PdfRender transactions={transactions} />} fileName={`Relatório de Transações ${(new Date()).toLocaleString()}.pdf`}>
             {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Baixar Relatório de Transações')}
           </PDFDownloadLink></Button>
         </Grid>
@@ -181,9 +197,16 @@ const Transactions = () => {
               <Grid item>
                 <BasicCard
                   title={`R$ ${transaction.value}`}
-                  subtitle={`${transaction.description} | para ${students.find(
-                    (student: any) => student.id == transaction.target
-                  )?.name
+                  subtitle={`${transaction.description} | ${transaction.type !== 'benefict' ?
+                    role == 'teacher' ?
+                      "para " + (students.find(
+                        (student: any) => student.userId == transaction.target
+                      )?.name ?? userName)
+                      :
+                      "de " + teachers.find(
+                        (teacher: any) => teacher.userId == transaction.origin
+                      )?.name
+                    : ''
                     }`}
                 />
               </Grid>

@@ -9,7 +9,7 @@ export class Mailer {
     }
 
     private buildTransporter = () => {
-        const smtpPort = process.env.ENV === 'production' ? 465 : 587;
+        const smtpPort = 587;
         return mailer.createTransport({
             pool: true,
             host: process.env.SMTP,
@@ -17,7 +17,8 @@ export class Mailer {
             auth: {
                 user: process.env.APP_EMAIL,
                 pass: process.env.APP_EMAIL_PASS
-            }
+            },
+
         });
     }
 

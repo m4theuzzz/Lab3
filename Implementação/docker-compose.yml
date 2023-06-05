@@ -30,9 +30,9 @@ services:
       - DB_NAME=lab_db
       - KEY=c@esuis-jAhm*uq-qimte&x
       - ENV=dev #change to prod on deploy
-      - SMTP=smtp.gmail.com
-      - APP_EMAIL=overseercompany@gmail.com
-      - APP_EMAIL_PASS=dahZyb-5rabsy-xivxup
+      - SMTP=smtp-mail.outlook.com
+      - APP_EMAIL=educoinlab@outlook.com
+      - APP_EMAIL_PASS=feRqin-nyxdas-curwu8
     depends_on:
       - lab_database
   lab_database:

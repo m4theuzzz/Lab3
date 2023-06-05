@@ -72,3 +72,32 @@ MailerService -> Mailer: sendMessage()
 
 BoughtBenefictsController ->- Frontend: Id do objeto inserido
 Frontend -->- S: Compra realizada com sucesso
+
+
+////////////////// Download Transaction Report //
+
+title Download Transaction Report
+
+actor User as U
+
+Frontend ->+ TransactionController: GET /transactions
+
+TransactionController ->+ Middleware: authMiddleware()
+Middleware -->- TransactionController: sessionId
+
+TransactionController ->+ GenericService: select()
+GenericService -> GenericService: filterObject()
+GenericService ->+ Database: buildQuery()
+Database -->- GenericService: query string
+GenericService ->+ Database: executeQuery()
+Database -->- GenericService: Transactions list
+GenericService -> GenericService: processTransactions()
+GenericService -->- TransactionController: Transactions list
+
+TransactionController -->- Frontend: Transactions json array
+
+U ->+ Frontend: Request Transactions Report
+Frontend ->+ Frontend: pdfViewer
+Frontend --> Frontend: pdfDownloadLink
+Frontend -->- U: Download Report PDF
+

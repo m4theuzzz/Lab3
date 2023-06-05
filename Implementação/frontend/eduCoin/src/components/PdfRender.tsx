@@ -24,7 +24,7 @@ const PdfRender = ({ transactions }: any) => {
                 <View style={{ ...styles.section }}>
                     <Text style={{ color: 'lightblue', fontSize: 32, marginBottom: 10 }}>Relatório de Transações</Text>
                     <Text style={{ marginBottom: 20, fontSize: 25 }}>{name}</Text>
-                    {transactions.map((transaction: any) => <Text style={{ marginBottom: 10 }}> - {transaction.description} | para {transaction.name} | {transaction.value} moedas</Text>)}
+                    {transactions.map((transaction: any) => <Text style={{ marginBottom: 10 }}> - {transaction.description}{transaction.type !== "benefict" ? " | para " + transaction.name : ''} | {transaction.value} moedas</Text>)}
                 </View>
 
             </Page>
