@@ -197,7 +197,7 @@ const Transactions = () => {
               <Grid item>
                 <BasicCard
                   title={`R$ ${transaction.value}`}
-                  subtitle={`${transaction.description} | ${transaction.type !== 'benefict' ?
+                  subtitle={`${transaction.description} | ${transaction.type !== 'benefit' ?
                     role == 'teacher' ?
                       "para " + (students.find(
                         (student: any) => student.userId == transaction.target

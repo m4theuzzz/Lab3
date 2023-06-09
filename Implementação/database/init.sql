@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Partners (
 
 CREATE TABLE IF NOT EXISTS Transactions (
     id bigint not null auto_increment,
-    type enum('debit', 'credit', 'benefict') not null,
+    type enum('debit', 'credit', 'benefit') not null,
     value int not null default 0,
     description text default null,
     origin bigint not null,
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS Transactions (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE IF NOT EXISTS Beneficts (
+CREATE TABLE IF NOT EXISTS Benefits (
     id bigint not null auto_increment,
     value int not null,
     description text not null,
@@ -89,14 +89,14 @@ CREATE TABLE IF NOT EXISTS Beneficts (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE IF NOT EXISTS BoughtBeneficts (
+CREATE TABLE IF NOT EXISTS BoughtBenefits (
     id varchar(36) not null unique default (uuid()),
-    benefict_id bigint not null,
+    benefit_id bigint not null,
     user_id bigint not null,
     value int not null,
     created_at datetime not null default current_timestamp,
     updated_at datetime not null default current_timestamp on update current_timestamp,
-    FOREIGN KEY (benefict_id) REFERENCES Beneficts(id),
+    FOREIGN KEY (benefit_id) REFERENCES Benefits(id),
     FOREIGN KEY (user_id) REFERENCES Users(id),
-    PRIMARY KEY(benefict_id, user_id)
+    PRIMARY KEY(benefit_id, user_id)
 );

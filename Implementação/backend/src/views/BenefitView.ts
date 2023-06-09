@@ -1,4 +1,4 @@
-export interface BenefictView {
+export interface BenefitView {
     id: number;
     userId: number;
     value: number;
@@ -8,7 +8,7 @@ export interface BenefictView {
     updatedAt: Date;
 }
 
-export interface BenefictRaw {
+export interface BenefitRaw {
     id: number;
     user_id: number;
     value: number;
@@ -18,17 +18,17 @@ export interface BenefictRaw {
     updated_at: Date;
 }
 
-export const processBenefict = (rawBenefict: BenefictRaw): BenefictView => ({
-    id: rawBenefict.id,
-    userId: rawBenefict.user_id,
-    value: rawBenefict.value,
-    description: rawBenefict.description,
-    photo: rawBenefict.photo,
-    createdAt: rawBenefict.created_at,
-    updatedAt: rawBenefict.updated_at,
+export const processBenefit = (rawBenefit: BenefitRaw): BenefitView => ({
+    id: rawBenefit.id,
+    userId: rawBenefit.user_id,
+    value: rawBenefit.value,
+    description: rawBenefit.description,
+    photo: rawBenefit.photo,
+    createdAt: rawBenefit.created_at,
+    updatedAt: rawBenefit.updated_at,
 });
 
-export const BenefictProperties = () => ({
+export const BenefitProperties = () => ({
     required: [
         "value",
         "description",

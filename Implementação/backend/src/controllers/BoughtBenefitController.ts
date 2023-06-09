@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import GenericService from '../services/GenericService';
 import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
-import { BoughtBenefictRaw, processBoughtBenefict } from '../views/BoughtBenefictView';
+import { BoughtBenefitRaw, processBoughtBenefit } from '../views/BoughtBenefitView';
 import { Database } from '../modules/Database';
 import { getTargetNewBalance } from './TransactionController';
 import { TransactionService } from '../services/TransactionService';
@@ -10,7 +10,7 @@ import { MailerService } from '../services/MailerService';
 import { StudentRaw } from '../views/StudentView';
 import { Email } from '../views/EmailView';
 import { UserRaw } from '../views/UsersView';
-import { BenefictRaw } from '../views/BenefictView';
+import { BenefitRaw } from '../views/BenefitView';
 
 export const route = Router();
 const service = new GenericService();
@@ -18,40 +18,40 @@ const operations = new TransactionService();
 
 route.get('/bought', authMiddleware, async (req: Request, res: Response) => {
     try {
-        const rawBoughtBeneficts = await service.select<BoughtBenefictRaw[]>(
+        const rawBoughtBenefits = await service.select<BoughtBenefitRaw[]>(
             {
                 userId: Number(req.sessionID),
                 role: req.params.role
             },
-            TablesNames.BOUGHT_BENEFICTS,
+            TablesNames.BOUGHT_Benefits,
             { user_id: req.sessionID }
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
 
-        const rawBeneficts = await service.select<BenefictRaw[]>(
+        const rawBenefits = await service.select<BenefitRaw[]>(
             {
                 userId: Number(req.sessionID),
                 role: req.params.role
             },
-            TablesNames.BENEFICTS,
+            TablesNames.Benefits,
             {}
         );
 
-        if (!rawBoughtBeneficts || !rawBeneficts) {
+        if (!rawBoughtBenefits || !rawBenefits) {
             return;
         }
 
-        const boughtBeneficts = rawBoughtBeneficts.map(boughtBenefict => {
-            const benefict = rawBeneficts.find(b => b.id === boughtBenefict.benefict_id);
+        const boughtBenefits = rawBoughtBenefits.map(boughtBenefit => {
+            const benefit = rawBenefits.find(b => b.id === boughtBenefit.benefit_id);
             return {
-                ...processBoughtBenefict(boughtBenefict),
-                photo: benefict?.photo,
-                description: benefict?.description
+                ...processBoughtBenefit(boughtBenefit),
+                photo: benefit?.photo,
+                description: benefit?.description
             }
         });
 
-        res.status(200).send(boughtBeneficts);
+        res.status(200).send(boughtBenefits);
     } catch (error) {
         res.status(error.status ?? 500).send(error.message);
     }
@@ -73,7 +73,7 @@ route.post('/buy', authMiddleware, async (req: Request, res: Response) => {
                 userId: Number(req.sessionID),
                 role: req.params.role
             },
-            TablesNames.BOUGHT_BENEFICTS,
+            TablesNames.BOUGHT_Benefits,
             { ...req.body, user_id: req.sessionID }
         ).catch(error => {
             err = error
@@ -94,7 +94,7 @@ route.post('/buy', authMiddleware, async (req: Request, res: Response) => {
                 origin: Number(req.sessionID),
                 target: Number(req.sessionID),
                 value: Number(req.body.value),
-                type: 'benefict',
+                type: 'benefit',
                 description: 'Compra do benefício'
             }
         ).catch(error => {
@@ -108,7 +108,7 @@ route.post('/buy', authMiddleware, async (req: Request, res: Response) => {
 
         await operations.buy(access, access.userId, newBalance);
 
-        const insertedId = (await service.getLastInsertedItem(TablesNames.BOUGHT_BENEFICTS))[0].id;
+        const insertedId = (await service.getLastInsertedItem(TablesNames.BOUGHT_Benefits))[0].id;
 
         const user = (await service.select<UserRaw[]>({
             userId: Number(req.sessionID)
@@ -117,7 +117,7 @@ route.post('/buy', authMiddleware, async (req: Request, res: Response) => {
         const email: Email = {
             to: user.email,
             subject: "Compra de Benefício",
-            text: `O benefício (${req.body.benefict_id}) foi comprado com sucesso. Seu identificador único é: ${insertedId}`
+            text: `O benefício (${req.body.benefit_id}) foi comprado com sucesso. Seu identificador único é: ${insertedId}`
         }
 
         MailerService.sendEmail(email);
@@ -151,7 +151,7 @@ route.delete('/refund', authMiddleware, async (req: Request, res: Response) => {
                 userId: Number(req.sessionID),
                 role: req.params.role
             },
-            TablesNames.BOUGHT_BENEFICTS,
+            TablesNames.BOUGHT_Benefits,
             String(req.query.id)
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);

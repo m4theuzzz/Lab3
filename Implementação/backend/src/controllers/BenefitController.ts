@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import GenericService from '../services/GenericService';
 import { authMiddleware } from '../modules/Midleware';
 import { TablesNames } from '../views/QueryBuildView';
-import { BenefictRaw, processBenefict } from '../views/BenefictView';
+import { BenefitRaw, processBenefit } from '../views/BenefitView';
 import { Database } from '../modules/Database';
 
 export const route = Router();
@@ -12,24 +12,24 @@ route.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const role = (await Database.findRole(Number(req.sessionID)))
         const querys = role == "partner" ? { ...req.query, user_id: req.sessionID } : req.query;
-        const rawBeneficts = await service.select<BenefictRaw[]>(
+        const rawBenefits = await service.select<BenefitRaw[]>(
             {
                 userId: Number(req.sessionID),
                 role: req.params.role
             },
-            TablesNames.BENEFICTS,
+            TablesNames.Benefits,
             querys
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);
         });
 
-        if (!rawBeneficts) {
+        if (!rawBenefits) {
             return;
         }
 
-        const beneficts = rawBeneficts.map(benefict => processBenefict(benefict));
+        const benefits = rawBenefits.map(benefit => processBenefit(benefit));
 
-        res.status(200).send(beneficts);
+        res.status(200).send(benefits);
     } catch (error) {
         res.status(error.status ?? 500).send(error.message);
     }
@@ -64,7 +64,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
                 userId: Number(req.sessionID),
                 role: req.params.role
             },
-            TablesNames.BENEFICTS,
+            TablesNames.Benefits,
             { ...req.body, user_id: req.sessionID }
         ).catch(error => {
             err = error
@@ -75,7 +75,7 @@ route.post('/', authMiddleware, async (req: Request, res: Response) => {
             return;
         }
 
-        const insertedId = (await service.getLastInsertedItem(TablesNames.BENEFICTS))[0].id;
+        const insertedId = (await service.getLastInsertedItem(TablesNames.Benefits))[0].id;
 
         if (insertion) {
             res.status(200).send({ message: "Benefício criado com sucesso.", id: insertedId });
@@ -118,7 +118,7 @@ route.put('/', authMiddleware, async (req: Request, res: Response) => {
                 userId: Number(req.sessionID),
                 role: req.params.role
             },
-            TablesNames.BENEFICTS,
+            TablesNames.Benefits,
             String(req.query.id),
             req.body
         ).catch(error => {
@@ -155,7 +155,7 @@ route.delete('/', authMiddleware, async (req: Request, res: Response) => {
                 userId: Number(req.sessionID),
                 role: req.params.role
             },
-            TablesNames.BENEFICTS,
+            TablesNames.Benefits,
             String(req.query.id)
         ).catch(error => {
             res.status(error.status ?? 500).send(error.sqlMessage);

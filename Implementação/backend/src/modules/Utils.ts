@@ -5,13 +5,13 @@ import { StudentProperties } from "../views/StudentView";
 import { PartnerProperties } from "../views/PartnerView";
 import { TeacherProperties } from "../views/TeacherView";
 import { TransactionProperties } from "../views/TransactionView";
-import { BenefictProperties } from "../views/BenefictView";
-import { BoughtBenefictProperties } from "../views/BoughtBenefictView";
+import { BenefitProperties } from "../views/BenefitView";
+import { BoughtBenefitProperties } from "../views/BoughtBenefitView";
 
 const viewProperties: any = {
     Users: UsersProperties(),
-    Beneficts: BenefictProperties(),
-    BoughtBeneficts: BoughtBenefictProperties(),
+    Benefits: BenefitProperties(),
+    BoughtBenefits: BoughtBenefitProperties(),
     Students: StudentProperties(),
     Partners: PartnerProperties(),
     Addresses: AddressProperties(),

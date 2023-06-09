@@ -68,8 +68,8 @@ const Beneficios = () => {
     try {
       await axios
         .post(
-          "http://localhost:3000/beneficts/buy",
-          { value: valuesBeneficio.value, benefict_id: valuesBeneficio.id },
+          "http://localhost:3000/benefits/buy",
+          { value: valuesBeneficio.value, benefit_id: valuesBeneficio.id },
           {
             headers: {
               "session-token": window.localStorage.getItem("apiKey"),
@@ -89,7 +89,7 @@ const Beneficios = () => {
 
   const handleDeleteBeneficio = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/beneficts?id=${id}`, {
+      await axios.delete(`http://localhost:3000/benefits?id=${id}`, {
         headers: {
           "session-token": window.localStorage.getItem("apiKey"),
         },
@@ -117,7 +117,7 @@ const Beneficios = () => {
     try {
       if (isEdit) {
         const res = await axios
-          .put(`http://localhost:3000/beneficts?id=${values.id}`, values, {
+          .put(`http://localhost:3000/benefits?id=${values.id}`, values, {
             headers: {
               "session-token": window.localStorage.getItem("apiKey"),
             },
@@ -125,7 +125,7 @@ const Beneficios = () => {
           .then((res) => res.data);
       } else {
         const res = await axios
-          .post("http://localhost:3000/beneficts", values, {
+          .post("http://localhost:3000/benefits", values, {
             headers: {
               "session-token": window.localStorage.getItem("apiKey"),
             },
@@ -141,7 +141,7 @@ const Beneficios = () => {
 
   const getBeneficios = async () => {
     const res = await axios
-      .get("http://localhost:3000/beneficts", {
+      .get("http://localhost:3000/benefits", {
         headers: {
           "session-token": window.localStorage.getItem("apiKey"),
         },
@@ -153,7 +153,7 @@ const Beneficios = () => {
 
   const getMyBeneficios = async () => {
     const res = await axios
-      .get("http://localhost:3000/beneficts/bought", {
+      .get("http://localhost:3000/benefits/bought", {
         headers: {
           "session-token": window.localStorage.getItem("apiKey"),
         },
