@@ -33,12 +33,13 @@ const Transactions = () => {
   const role = useMemo(() => window.localStorage.getItem("role"), []);
   const userName = useMemo(() => window.localStorage.getItem("name"), []);
 
-
   const getBalance = async () => {
     const res = await axios
       .get(
-        "http://localhost:3000/" + role + "s" +
-        `?user_id=${window.localStorage.getItem("userId")}`,
+        "http://localhost:3000/" +
+          role +
+          "s" +
+          `?user_id=${window.localStorage.getItem("userId")}`,
         {
           headers: {
             "session-token": window.localStorage.getItem("apiKey"),
@@ -105,8 +106,8 @@ const Transactions = () => {
   };
 
   const renderDownloadPDF = () => {
-    ReactPDF.render(<PdfRender />, './example.pdf')
-  }
+    ReactPDF.render(<PdfRender />, "./example.pdf");
+  };
 
   useEffect(() => {
     getBalance();
@@ -117,9 +118,6 @@ const Transactions = () => {
 
   return (
     <Grid container xs={12}>
-
-      <PDFViewer><PdfRender transactions={transactions} /></PDFViewer>
-
       <NavBar pageName={"Transações"} />
       <Grid container spacing={5} sx={{ p: 5 }}>
         {role != "student" ? (
@@ -127,14 +125,24 @@ const Transactions = () => {
             <Button variant="contained" onClick={transactionModal.open}>
               Nova Transação
             </Button>
-
           </Grid>
         ) : null}
 
         <Grid item xs={12}>
-          <Button variant='contained'> <PDFDownloadLink style={{ color: 'white' }} document={<PdfRender transactions={transactions} />} fileName={`Relatório de Transações ${(new Date()).toLocaleString()}.pdf`}>
-            {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Baixar Relatório de Transações')}
-          </PDFDownloadLink></Button>
+          <Button variant="contained">
+            {" "}
+            <PDFDownloadLink
+              style={{ color: "white" }}
+              document={<PdfRender transactions={transactions} />}
+              fileName={`Relatório de Transações ${new Date().toLocaleString()}.pdf`}
+            >
+              {({ blob, url, loading, error }) =>
+                loading
+                  ? "Loading document..."
+                  : "Baixar Relatório de Transações"
+              }
+            </PDFDownloadLink>
+          </Button>
         </Grid>
 
         <Grid item xs={12}>
@@ -194,27 +202,31 @@ const Transactions = () => {
         <Grid item xs={12}>
           {transactions.length
             ? transactions.map((transaction: any) => (
-              <Grid item>
-                <BasicCard
-                  title={`R$ ${transaction.value}`}
-                  subtitle={`${transaction.description} | ${transaction.type !== 'benefit' ?
-                    role == 'teacher' ?
-                      "para " + (students.find(
-                        (student: any) => student.userId == transaction.target
-                      )?.name ?? userName)
-                      :
-                      "de " + teachers.find(
-                        (teacher: any) => teacher.userId == transaction.origin
-                      )?.name
-                    : ''
+                <Grid item>
+                  <BasicCard
+                    title={`R$ ${transaction.value}`}
+                    subtitle={`${transaction.description} | ${
+                      transaction.type !== "benefit"
+                        ? role == "teacher"
+                          ? "para " +
+                            (students.find(
+                              (student: any) =>
+                                student.userId == transaction.target
+                            )?.name ?? userName)
+                          : "de " +
+                            teachers.find(
+                              (teacher: any) =>
+                                teacher.userId == transaction.origin
+                            )?.name
+                        : ""
                     }`}
-                />
-              </Grid>
-            ))
+                  />
+                </Grid>
+              ))
             : null}
         </Grid>
       </Grid>
-    </Grid >
+    </Grid>
   );
 };
 

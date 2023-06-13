@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 const PdfRender = ({ transactions }: any) => {
   const name = window.localStorage.getItem("name");
 
-  console.log(name);
+  console.log(transactions);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
